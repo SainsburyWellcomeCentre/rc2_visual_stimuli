@@ -84,12 +84,11 @@ classdef Flash < handle
                 % Hide the cursor.
                 HideCursor;
                 
-                % Query the frame duration
-                ifi = Screen('GetFlipInterval', window);
-                
                 % Set up alpha-blending for smooth (anti-aliased) lines
                 Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
                 
+                % Query the frame duration
+                ifi = Screen('GetFlipInterval', window);
                 
                 % We set PTB to wait one frame before re-drawing
                 waitframes = 1;

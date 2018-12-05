@@ -140,13 +140,13 @@ classdef Retinotopy < handle
                 % Hide the cursor.
                 HideCursor;
                 
-                % Query the frame duration
-                ifi = Screen('GetFlipInterval', window);
-                
                 nDriftFrames = floor(obj.stimulus_interval / ifi);
                 
                 % Set up alpha-blending for smooth (anti-aliased) lines
                 Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
+                
+                % Query the frame duration
+                ifi = Screen('GetFlipInterval', window);
                 
                 % Grating size in pixels
                 gratingSizePix = ceil(sqrt(screen_pixels(1)^2 + screen_pixels(2)^2));

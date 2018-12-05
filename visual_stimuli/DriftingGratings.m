@@ -118,11 +118,11 @@ classdef DriftingGratings < handle
                 % Get the size of the on screen window
                 [screenXpixels, screenYpixels] = Screen('WindowSize', window);
                 
-                % Query the frame duration
-                ifi = Screen('GetFlipInterval', window);
-                
                 % Set up alpha-blending for smooth (anti-aliased) lines
                 Screen('BlendFunction', window, 'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA');
+                
+                % Query the frame duration
+                ifi = Screen('GetFlipInterval', window);
                 
                 % Grating size in pixels
                 gratingSizePix = ceil(sqrt(screenXpixels^2 + screenYpixels^2));
