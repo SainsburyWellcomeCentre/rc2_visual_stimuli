@@ -1,4 +1,33 @@
 classdef VisualStimulusController < handle
+    %% VisualStimulusController()
+    %       this is the main object which controls which visual
+    %       stimuli are run, and some general configuration parameters.
+    %   Properties:
+    %       n_triggers:     read-only property giving the total number of
+    %                       triggers this script will expect to receive
+    %       save_enabled:   true (default) or false. whether or not to save
+    %                       stimulus_info.mat, AI.bin and AI_info.mat files
+    %                       containing information about the stimulus, and
+    %                       the analog input data.
+    %       distance_from_screen:   in mm
+    %       screen_number:  which screen to present the stimulus on
+    %       screen_size:    size in [X, Y], in mm of the screen
+    %       stimulus:       object containing the visual stimulus to
+    %                       present. can be set using the .set_stimulus(option) 
+    %                       method where options are: 'drifting_gratings',
+    %                       'retinotopy', 'flash', or 'sparse_noise'.
+    %       base_directory: main directory where current controller will setup
+    %                       subdirectories in which data and info files
+    %                       will be saved
+    %       save_directory: subdirectory where the next run of the visual
+    %                       stimulus (using v.start()) will save data and
+    %                       info files
+    %       filename:       full path to where stimulus_info.mat will be
+    %                       saved
+    %   Methods (see 'help VisualStimulusController.<method>' for help):
+    %       set_stimulus
+    %       set_directory
+    %       start
     
     
     properties (Dependent = true)
@@ -85,6 +114,10 @@ classdef VisualStimulusController < handle
         
         
         function set_stimulus(obj, type)
+            %% SET_STIMULUS(type)
+            %       set the visual stimulus to be presented to one of:
+            %       type: 'drifting_gratings', 'retinotopy', 'flash',
+            %       'sparse_noise'
             
             if strcmp(type, 'drifting_gratings')
                 obj.stimulus = DriftingGratings(obj);
@@ -117,13 +150,16 @@ classdef VisualStimulusController < handle
             stimulus.daq.ctr.device = obj.daq.counter_device;
             stimulus.daq.ctr.channels = obj.daq.counter_channel;
             stimulus.daq.ai_min_voltage = obj.daq.ai_min_voltage;
-            stimulus.daq.ai_max_voltage = obj.daq.ai_max_voltage;
+            stimulus.daq.ai_max_voltage = obj.daq.ai_max_voltage; %#ok<STRNU>
             
             save(obj.filename, 'stimulus');
         end
         
         
         function start(obj)
+            %% START()
+            %       starts the visual stimulus running, expecting an
+            %       incoming trigger.
             
             if obj.socket_enabled
                 obj.tcpip.open_connection(); pause(1)
@@ -144,7 +180,7 @@ classdef VisualStimulusController < handle
             obj.daq.save_directory = obj.save_directory;
             
             % Must prepare the stimulus before saving the stimulus
-            % information (as there are random).
+            % information (as there are random numbers to generate).
             obj.stimulus.prepare();
             
             obj.daq.save_ai = obj.save_enabled;

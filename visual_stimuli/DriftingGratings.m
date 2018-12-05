@@ -37,6 +37,12 @@ classdef DriftingGratings < StimulusAbstract
         
         function val = get.total_n_triggers(obj)
             
+            % There are obj.n_baseline_triggers at beginning and end of
+            % visual stimulus 
+            %   = 2 * obj.n_baseline_triggers
+            % For each obj.n_orientations and each obj.n_repetitions there
+            % is a static or grey period and also a drifting period
+            %   = 2 * obj.n_orientations * obj.n_repetitions
             val = 2 * obj.n_baseline_triggers + (2 * obj.n_orientations * obj.n_repetitions);
         end
         
