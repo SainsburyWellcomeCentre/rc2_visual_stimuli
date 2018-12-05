@@ -2,7 +2,7 @@ classdef VisualStimulusController < handle
     
     properties
         
-        socket_enabled = true
+        socket_enabled = false
         save_enabled = true
         stimulus
         distance_from_screen = 200  % mm

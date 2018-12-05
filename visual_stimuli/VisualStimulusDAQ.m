@@ -19,8 +19,8 @@ classdef VisualStimulusDAQ < handle
         
         fid
         ai_device = 'Dev1'
-        counter_device = 'Dev2'
-        counter_channel = 3
+        counter_device = 'Dev1'
+        counter_channel = 0
         ai_min_voltage = -10
         ai_max_voltage = 10
     end
