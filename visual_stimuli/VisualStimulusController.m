@@ -112,7 +112,7 @@ classdef VisualStimulusController < handle
             stimulus.daq.ai.channels = obj.daq.channels;
             stimulus.daq.ai.sample_rate = obj.daq.sample_rate;
             stimulus.daq.ai.save_every_n_samples = obj.daq.save_every_n_samples;
-            stimulus.daq.ai.file_to_write = obj.daq.file_to_write;
+            stimulus.daq.ai.save_directory = obj.daq.save_directory;
             stimulus.daq.ctr.device = obj.daq.counter_device;
             stimulus.daq.ctr.channels = obj.daq.counter_channel;
             stimulus.daq.ai_min_voltage = obj.daq.ai_min_voltage;
@@ -140,7 +140,7 @@ classdef VisualStimulusController < handle
                 end
             end
             
-            obj.daq.file_to_write = fullfile(obj.save_directory, 'AI.bin');
+            obj.daq.save_directory = obj.save_directory;
             
             % Must prepare the stimulus before saving the stimulus
             % information (as there are random).
