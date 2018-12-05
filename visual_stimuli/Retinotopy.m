@@ -102,9 +102,7 @@ classdef Retinotopy < StimulusAbstract
                 
                 sca;
                 
-                [screen_pixels(1), screen_pixels(2)] = Screen('WindowSize', obj.controller.screen_number);
-                
-                mmPerPixel = obj.controller.screen_size./screen_pixels;
+                mmPerPixel = obj.controller.screen_size./obj.controller.screen_pixels;
                 
                 % Shorthand for distance per visual angle at the centre of the screen
                 mmPerVisualDegree = obj.controller.distance_from_screen * (pi/180);

@@ -11,7 +11,8 @@ classdef VisualStimulusController < handle
     %                       the analog input data.
     %       distance_from_screen:   in mm
     %       screen_number:  which screen to present the stimulus on
-    %       screen_size:    size in [X, Y], in mm of the screen
+    %       screen_size:    size in [X, Y], in mm, of the screen
+    %       screen_pixels:  size in [X, Y], in pixels, of the screen
     %       stimulus:       object containing the visual stimulus to
     %                       present. can be set using the .set_stimulus(option) 
     %                       method where options are: 'drifting_gratings',
@@ -46,6 +47,7 @@ classdef VisualStimulusController < handle
     end
     
     properties (SetAccess = private)
+        screen_pixels
         stimulus
         base_directory
         save_directory
@@ -75,6 +77,7 @@ classdef VisualStimulusController < handle
             
             obj.screens = Screen('Screens');
             obj.screen_number = max(obj.screens);
+            obj.screen_pixels = Screen('WindowSize', obj.screen_number);
             % https://www.dell.com/ed/business/p/dell-u2415/pd
             obj.screen_size = [518.4, 324.0]; % [473.8, 296.1];  % mm, [X, Y]
             

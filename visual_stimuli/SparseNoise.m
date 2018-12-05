@@ -91,15 +91,12 @@ classdef SparseNoise < StimulusAbstract
                 % Clear the screen
                 sca;
                 
-                % Get number of pixels on screen
-                [screen_pixels(1), screen_pixels(2)] = Screen('WindowSize', obj.controller.screen_number);
-                
                 % Calculate the positions of the squares on the screen
-                xSize = screen_pixels(1) / obj.grid_size(1);
-                ySize = screen_pixels(2) / obj.grid_size(2);
+                xSize = obj.controller.screen_pixels(1) / obj.grid_size(1);
+                ySize = obj.controller.screen_pixels(2) / obj.grid_size(2);
                 
-                xCenter = xSize/2 : xSize : screen_pixels(1);
-                yCenter = ySize/2 : ySize : screen_pixels(2);
+                xCenter = xSize/2 : xSize : obj.controller.screen_pixels(1);
+                yCenter = ySize/2 : ySize : obj.controller.screen_pixels(2);
                 [xCenter, yCenter] = meshgrid(xCenter, yCenter);
                 xCenter = xCenter(:);
                 yCenter = yCenter(:);
