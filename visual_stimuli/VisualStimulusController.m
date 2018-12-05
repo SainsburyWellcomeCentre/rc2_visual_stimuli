@@ -71,7 +71,7 @@ classdef VisualStimulusController < handle
         end
         
         
-        function set_name(obj, namestr)
+        function set_directory(obj, namestr)
             
             obj.save_directory = fullfile(obj.base_directory, namestr);
             mkdir(obj.save_directory);
