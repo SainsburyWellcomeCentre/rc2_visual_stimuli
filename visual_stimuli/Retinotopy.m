@@ -1,4 +1,4 @@
-classdef Retinotopy < handle
+classdef Retinotopy < StimulusAbstract
     
     properties
         

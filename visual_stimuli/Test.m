@@ -1,4 +1,4 @@
-classdef Testing < handle
+classdef Test < StimulusAbstract
     
     properties
        
@@ -6,7 +6,7 @@ classdef Testing < handle
     end
     
     
-    properties (Hidden = true)
+    properties (Hidden = true, SetAccess = private)
         
         controller
     end
@@ -24,6 +24,8 @@ classdef Testing < handle
         function prepare(obj)
         end
         
+        function to_save(obj)
+        end
         
         function run(obj)
             

@@ -1,4 +1,4 @@
-classdef DriftingGratings < handle
+classdef DriftingGratings < StimulusAbstract
     
     properties
         
@@ -19,7 +19,7 @@ classdef DriftingGratings < handle
     end
     
     
-    properties (Hidden = true)
+    properties (Hidden = true, SetAccess = private)
         
         controller
         random_orientations

@@ -1,4 +1,4 @@
-classdef SparseNoise < handle
+classdef SparseNoise < StimulusAbstract
     
     properties
         

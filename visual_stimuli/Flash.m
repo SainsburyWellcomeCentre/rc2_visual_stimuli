@@ -1,4 +1,4 @@
-classdef Flash < handle
+classdef Flash < StimulusAbstract
     
     properties
         
@@ -15,7 +15,7 @@ classdef Flash < handle
     end
     
     
-    properties (Hidden = true)
+    properties (Hidden = true, SetAccess = private)
         
         controller
     end
