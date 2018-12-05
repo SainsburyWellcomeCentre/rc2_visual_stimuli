@@ -6,6 +6,12 @@ classdef VisualStimulusController < handle
         save_enabled = true
         stimulus
         distance_from_screen = 200  % mm
+        save_directory
+    end
+    
+    properties (SetAccess = private)
+        
+        base_directory
     end
     
     properties (Dependent = true)
@@ -22,7 +28,6 @@ classdef VisualStimulusController < handle
     properties (Hidden = true, SetAccess = private)
         
         tcpip
-        filepath
         
         screens
         screen_number
@@ -44,6 +49,12 @@ classdef VisualStimulusController < handle
             obj.screen_size = [518.4, 324.0]; % [473.8, 296.1];  % mm, [X, Y]
             
             obj.daq = VisualStimulusDAQ();
+            
+            % prompt user for directory in which to save
+            obj.base_directory = uigetdir('C:\data', 'Choose data path...');
+            if obj.base_directory == 0
+                obj.base_directory = 'C:\data';
+            end
         end
         
         
@@ -55,7 +66,14 @@ classdef VisualStimulusController < handle
         
         function val = get.filename(obj)
             
-            val = fullfile(obj.filepath, 'stimulus_info.mat');
+            val = fullfile(obj.save_directory, 'stimulus_info.mat');
+        end
+        
+        
+        function set_name(obj, namestr)
+            
+            obj.save_directory = fullfile(obj.base_directory, namestr);
+            mkdir(obj.save_directory);
         end
         
         
@@ -109,20 +127,20 @@ classdef VisualStimulusController < handle
             if obj.socket_enabled
                 obj.tcpip.open_connection(); pause(1)
                 if obj.save_enabled
-                    obj.filepath = obj.tcpip.receive_message();
-                    if isempty(obj.filepath)
+                    obj.filename = obj.tcpip.receive_message();
+                    if isempty(obj.filename)
                         [~, new_dir] = fileparts(tempname);
                         mkdir(tempdir, new_dir);
-                        obj.filepath = fullfile(tempdir, new_dir);
+                        obj.filename = fullfile(tempdir, new_dir);
                     end
                 else
                     [~, new_dir] = fileparts(tempname);
                     mkdir(tempdir, new_dir);
-                    obj.filepath = fullfile(tempdir, new_dir);
+                    obj.filename = fullfile(tempdir, new_dir);
                 end
             end
             
-            obj.daq.file_to_write = fullfile(obj.filepath, 'AI.bin');
+            obj.daq.file_to_write = fullfile(obj.save_directory, 'AI.bin');
             
             % Must prepare the stimulus before saving the stimulus
             % information (as there are random).
@@ -130,6 +148,9 @@ classdef VisualStimulusController < handle
             
             obj.daq.save_ai = obj.save_enabled;
             if obj.save_enabled
+                if exist(obj.filename, 'file') == 2
+                    error('%s already exists.', obj.filename);
+                end
                 obj.save()
             end
             obj.daq.start()
