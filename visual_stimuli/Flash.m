@@ -103,12 +103,16 @@ classdef Flash < handle
                     obj.controller.tcpip.send_ready();
                 end
                 
-                tic;
                 % Run a certain number of baseline frames at the beginning
                 while inputSingleScan(obj.controller.daq.ctr) < obj.n_baseline_triggers + 1
+                    if inputSingleScan(obj.controller.daq.ctr) == 1
+                        tic;
+                    end
                 end
                 
-                approx_trigger_interval = toc/obj.n_baseline_triggers;
+                % Calculate time since first trigger received and add 1
+                % second to be sure.
+                approx_trigger_interval = toc/obj.n_baseline_triggers + 1;
                 
                 triggerCount = 1;
                 
