@@ -280,7 +280,8 @@ classdef Retinotopy < StimulusAbstract
                                 Screen('FillRect', window, pd_alternator, obj.pd_position);
                                 
                                 % Flip to the screen on the next vertical retrace
-                                vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+                                % vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+                                Screen('Flip', window);
                             end
                         end
                         pd_alternator = mod(pd_alternator+1, 2);

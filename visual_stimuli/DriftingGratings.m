@@ -255,7 +255,8 @@ classdef DriftingGratings < StimulusAbstract
                                     end
                                     
                                     % Flip to the screen on the next vertical retrace
-                                    vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+                                    % vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+                                    Screen('Flip', window);
                                     
                                 else
                                     
@@ -267,7 +268,8 @@ classdef DriftingGratings < StimulusAbstract
                                         Screen('FillRect', window, 0, obj.pd_position);
                                         
                                         % Flip to the screen on the next vertical retrace
-                                        vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+                                        % vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+                                        Screen('Flip', window);
                                     else
                                         
                                         % Calculate the xoffset for our window through which to sample our
@@ -292,7 +294,8 @@ classdef DriftingGratings < StimulusAbstract
                                         end
                                         
                                         % Flip to the screen on the next vertical retrace
-                                        vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+                                        % vbl = Screen('Flip', window, vbl + (waitframes - 0.5) * ifi);
+                                        Screen('Flip', window);
                                     end
                                 end
                             end

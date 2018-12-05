@@ -51,7 +51,7 @@ classdef VisualStimulusController < handle
             obj.daq = VisualStimulusDAQ();
             
             % prompt user for directory in which to save
-            obj.base_directory = uigetdir('C:\data', 'Choose data path...');
+            obj.base_directory = uigetdir('\\Nn7908796\d', 'Choose data path...');
             if obj.base_directory == 0
                 obj.base_directory = 'C:\data';
             end
