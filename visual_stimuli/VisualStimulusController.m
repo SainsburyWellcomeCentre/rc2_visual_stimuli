@@ -1,37 +1,38 @@
 classdef VisualStimulusController < handle
     
-    properties
-        
+    
+    properties (Dependent = true)
+        n_triggers
+    end
+    
+    properties (Hidden = true)
         socket_enabled = false
+    end
+    
+    properties
         save_enabled = true
-        stimulus
         distance_from_screen = 200  % mm
-        save_directory
+        screen_number
+        screen_size
     end
     
     properties (SetAccess = private)
-        
+        stimulus
         base_directory
+        save_directory
     end
     
     properties (Dependent = true)
-        
-        n_triggers
         filename
     end
     
-    properties
-        
+    properties (Hidden = true)
         daq
     end
     
     properties (Hidden = true, SetAccess = private)
-        
         tcpip
-        
         screens
-        screen_number
-        screen_size
     end
     
     
