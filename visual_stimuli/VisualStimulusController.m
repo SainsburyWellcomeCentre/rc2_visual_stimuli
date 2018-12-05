@@ -5,6 +5,10 @@ classdef VisualStimulusController < handle
     %   Properties:
     %       n_triggers:     read-only property giving the total number of
     %                       triggers this script will expect to receive
+    %       stimulus:       object containing the visual stimulus to
+    %                       present. can be set using the .set_stimulus(option) 
+    %                       method where options are: 'drifting_gratings',
+    %                       'retinotopy', 'flash', or 'sparse_noise'.
     %       save_enabled:   true (default) or false. whether or not to save
     %                       stimulus_info.mat, AI.bin and AI_info.mat files
     %                       containing information about the stimulus, and
@@ -13,10 +17,6 @@ classdef VisualStimulusController < handle
     %       screen_number:  which screen to present the stimulus on
     %       screen_size:    size in [X, Y], in mm, of the screen
     %       screen_pixels:  size in [X, Y], in pixels, of the screen
-    %       stimulus:       object containing the visual stimulus to
-    %                       present. can be set using the .set_stimulus(option) 
-    %                       method where options are: 'drifting_gratings',
-    %                       'retinotopy', 'flash', or 'sparse_noise'.
     %       base_directory: main directory where current controller will setup
     %                       subdirectories in which data and info files
     %                       will be saved
@@ -35,6 +35,10 @@ classdef VisualStimulusController < handle
         n_triggers
     end
     
+    properties (SetAccess = private)
+        stimulus
+    end
+    
     properties (Hidden = true)
         socket_enabled = false
     end
@@ -48,7 +52,6 @@ classdef VisualStimulusController < handle
     
     properties (SetAccess = private)
         screen_pixels
-        stimulus
         base_directory
         save_directory
     end
@@ -77,7 +80,7 @@ classdef VisualStimulusController < handle
             
             obj.screens = Screen('Screens');
             obj.screen_number = max(obj.screens);
-            obj.screen_pixels = Screen('WindowSize', obj.screen_number);
+            [obj.screen_pixels(1), obj.screen_pixels(2)] = Screen('WindowSize', obj.screen_number);
             % https://www.dell.com/ed/business/p/dell-u2415/pd
             obj.screen_size = [518.4, 324.0]; % [473.8, 296.1];  % mm, [X, Y]
             
