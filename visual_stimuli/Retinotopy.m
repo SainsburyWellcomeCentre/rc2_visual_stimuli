@@ -115,11 +115,11 @@ classdef Retinotopy < StimulusAbstract
                 % (X, Y)
                 
                 % Grid centres and sizes
-                xSize = screen_pixels(1) / obj.grid_size(1);
-                ySize = screen_pixels(2) / obj.grid_size(2);
+                xSize = obj.controller.screen_pixels(1) / obj.grid_size(1);
+                ySize = obj.controller.screen_pixels(2) / obj.grid_size(2);
                 
-                xCenter = xSize/2 : xSize : screen_pixels(1);
-                yCenter = ySize/2 : ySize : screen_pixels(2);
+                xCenter = xSize/2 : xSize : obj.controller.screen_pixels(1);
+                yCenter = ySize/2 : ySize : obj.controller.screen_pixels(2);
                 [xCenter, yCenter] = meshgrid(xCenter, yCenter);
                 xCenter = xCenter(:);
                 yCenter = yCenter(:);
@@ -147,7 +147,7 @@ classdef Retinotopy < StimulusAbstract
                 ifi = Screen('GetFlipInterval', window);
                 
                 % Grating size in pixels
-                gratingSizePix = ceil(sqrt(screen_pixels(1)^2 + screen_pixels(2)^2));
+                gratingSizePix = ceil(sqrt(obj.controller.screen_pixels(1)^2 + obj.controller.screen_pixels(2)^2));
                 
                 % Grating frequency in cycles / pixel
                 freqCyclesPerPix = 1/pixelsPerCycle(1);
