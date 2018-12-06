@@ -87,7 +87,7 @@ classdef VisualStimulusController < handle
             obj.daq = VisualStimulusDAQ();
             
             % prompt user for directory in which to save
-            obj.base_directory = uigetdir('\\Nn7908796\d', 'Choose data path...');
+            obj.base_directory = uigetdir('C:\data', 'Choose data path...');
             if obj.base_directory == 0
                 obj.base_directory = 'C:\data';
             end
@@ -106,11 +106,11 @@ classdef VisualStimulusController < handle
         end
         
         
-        function set_directory(obj, namestr)
-            
-            obj.save_directory = fullfile(obj.base_directory, namestr);
-            mkdir(obj.save_directory);
-        end
+%         function set_directory(obj, namestr)
+%             
+%             obj.save_directory = fullfile(obj.base_directory, namestr);
+%             mkdir(obj.save_directory);
+%         end
         
         
         function val = get.n_triggers(obj)
@@ -167,35 +167,29 @@ classdef VisualStimulusController < handle
             %       starts the visual stimulus running, expecting an
             %       incoming trigger.
             
-            if obj.socket_enabled
-                obj.tcpip.open_connection(); pause(1)
-                if obj.save_enabled
-                    obj.filename = obj.tcpip.receive_message();
-                    if isempty(obj.filename)
-                        [~, new_dir] = fileparts(tempname);
-                        mkdir(tempdir, new_dir);
-                        obj.filename = fullfile(tempdir, new_dir);
-                    end
-                else
-                    [~, new_dir] = fileparts(tempname);
-                    mkdir(tempdir, new_dir);
-                    obj.filename = fullfile(tempdir, new_dir);
-                end
-            end
-            
-            obj.daq.save_directory = obj.save_directory;
-            
             % Must prepare the stimulus before saving the stimulus
-            % information (as there are random numbers to generate).
+            % information (as there may be random numbers to generate).
             obj.stimulus.prepare();
-            
             obj.daq.save_ai = obj.save_enabled;
+            
             if obj.save_enabled
+                
+                directory_name = uigetdir(obj.base_directory);
+                if directory_name == 0
+                    error(['No directory selected, but obj.save_enabled set to true. ', ...
+                        'Set obj.save_enabled to false if you want to run without saving data'])
+                end
+                
+                obj.save_directory = directory_name;
+                obj.daq.save_directory = obj.save_directory;
+                
+                
                 if exist(obj.filename, 'file') == 2
                     error('%s already exists.', obj.filename);
                 end
                 obj.save()
             end
+            
             obj.daq.start()
             
             try    
