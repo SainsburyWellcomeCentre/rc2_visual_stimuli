@@ -2,7 +2,7 @@
 % script to generate an experimental schedule for a retinotopy 
 
 % where to save the experimental schedule information
-schedule_path = 'C:\Users\Carol\Documents\Work\ctsitou\margrielab\visual_stimuli\schedule\retinotopy_schedule_20190205.mat';
+schedule_file = 'C:\Users\Carol\Documents\Work\ctsitou\margrielab\visual_stimuli\schedule\retinotopy_schedule_20190205.mat';
 
 type                    = 'Retinotopy';
 grid_size               = [4, 3];  % locations to present sparse noise, [x, y]
@@ -61,13 +61,13 @@ schedule.waveform               = waveform;
 
 % Save the schedule in specified location.
 % If file exists, check before overwriting.
-if exist(schedule_path, 'file')
+if exist(schedule_file, 'file')
     answer = questdlg('File name already exists. Overwrite?', '', 'Yes', 'No', 'No');
     if strcmp(answer, 'Yes')
-        save(schedule_path, 'schedule');
+        save(schedule_file, 'schedule');
     end
 else
-	save(schedule_path, 'schedule');
+	save(schedule_file, 'schedule');
 end
 
 % clearup

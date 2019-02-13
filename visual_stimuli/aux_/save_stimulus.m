@@ -39,7 +39,7 @@ stimulus.stimulus.pd_location               = pd.location;
 stimulus.stimulus.pd_position               = pd.position;
 
 
-stimulus.source                             = options.schedule_path;
+stimulus.source                             = options.schedule_file;
 stimulus.schedule                           = schedule;
 stimulus.session_n                          = session_n;
 stimulus.n_stim_per_session                 = schedule.n_stim_per_session;

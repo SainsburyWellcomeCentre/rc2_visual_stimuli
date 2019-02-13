@@ -4,7 +4,7 @@
 % imaging sessions where to save the experimental schedule information
 
 % where to save the experimental schedule information
-schedule_path = 'C:\Users\Carol\Documents\Work\ctsitou\margrielab\visual_stimuli\schedule\sparse_noise_schedule_20190205.mat';
+schedule_file = 'C:\Users\Carol\Documents\Work\ctsitou\margrielab\visual_stimuli\schedule\sparse_noise_schedule_20190205.mat';
 
 type                    = 'SparseNoise';
 grid_size               = [12, 10];  % locations to present sparse noise
@@ -56,13 +56,13 @@ schedule.total_n_triggers       = total_n_triggers;
 
 % Save the schedule in specified location.
 % If file exists, check before overwriting.
-if exist(schedule_path, 'file')
+if exist(schedule_file, 'file')
     answer = questdlg('File name already exists. Overwrite?', '', 'Yes', 'No', 'No');
     if strcmp(answer, 'Yes')
-        save(schedule_path, 'schedule');
+        save(schedule_file, 'schedule');
     end
 else
-	save(schedule_path, 'schedule');
+	save(schedule_file, 'schedule');
 end
 
 % clearup

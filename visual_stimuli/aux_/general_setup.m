@@ -17,4 +17,4 @@ setup                   = SetupInfo(ptb);
 setup.set_screen_number(options.screen_number);
 
 % Load the pre-compiled schedule information
-load(options.schedule_path, 'schedule')
+load(options.schedule_file, 'schedule')
