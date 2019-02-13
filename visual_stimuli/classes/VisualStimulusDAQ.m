@@ -4,6 +4,7 @@ classdef VisualStimulusDAQ < handle
         
         ai
         ctr
+        is_available
     end
     
     properties
@@ -39,11 +40,24 @@ classdef VisualStimulusDAQ < handle
         
         function obj = VisualStimulusDAQ()
             
+            % test here whether devices exist.
+            devices = daq.getDevices();
+            
+            if isempty(devices)
+                obj.is_available = false;
+                return
+            else
+                obj.is_available = true;
+            end
+            
             obj.setup_daq();
         end
         
         
         function delete(obj)
+            
+            if ~obj.is_available; return
+            end
             
             delete(obj.ai);
             if obj.fid > 0
@@ -53,6 +67,9 @@ classdef VisualStimulusDAQ < handle
         
         
         function setup_daq(obj)
+            
+            if ~obj.is_available; return
+            end
             
             % Required for the PXI for some reason: see
             % https://uk.mathworks.com/matlabcentral/answers/37134-data-acquisition-from-ni-pxie-1062q
@@ -75,6 +92,9 @@ classdef VisualStimulusDAQ < handle
         
         function delete_daq(obj)
             
+            if ~obj.is_available; return
+            end
+            
             obj.ai.stop();
             delete(obj.ai);
             delete(obj.ctr);
@@ -83,17 +103,26 @@ classdef VisualStimulusDAQ < handle
         
         function val = get.ai_file(obj)
             
+            if ~obj.is_available; return
+            end
+            
             val = fullfile(obj.save_directory, 'AI.bin');
         end
         
         
         function val = get.metadata_file(obj)
             
+            if ~obj.is_available; return
+            end
+            
             val = fullfile(obj.save_directory, 'AI_info.mat');
         end
         
         
         function refresh_daq(obj)
+            
+            if ~obj.is_available; return
+            end
             
             obj.samples_written = 0;
             obj.delete_daq()
@@ -103,12 +132,18 @@ classdef VisualStimulusDAQ < handle
         
         function set_sample_rate(obj, val)
             
+            if ~obj.is_available; return
+            end
+            
             obj.sample_rate = val;
             obj.ai.Rate = val;
         end
         
         
         function start(obj)
+            
+            if ~obj.is_available; return
+            end
             
             if obj.save_ai
                 assert(length(obj.channels) == length(obj.channel_description), ...
@@ -129,6 +164,9 @@ classdef VisualStimulusDAQ < handle
         
         function save_metadata(obj)
             
+            if ~obj.is_available; return
+            end
+            
             ai.n_channels = length(obj.channels);
             ai.n_samples = NaN;
             ai.channel_description = obj.channel_description;
@@ -142,6 +180,9 @@ classdef VisualStimulusDAQ < handle
         
         
         function stop(obj)
+            
+            if ~obj.is_available; return
+            end
             
             obj.ai.stop();
             obj.ctr.resetCounters();
@@ -158,6 +199,9 @@ classdef VisualStimulusDAQ < handle
         
         
         function log_data(obj, ~, evt)
+            
+            if ~obj.is_available; return
+            end
             
             if ~obj.save_ai; return
             end
