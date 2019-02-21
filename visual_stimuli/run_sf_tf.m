@@ -154,11 +154,14 @@ try
     end
     
     ptb.stop();
+    % The pause is essential for logging the AI data to file.....
+    pause(1)
     daq.stop();
     
 catch ME
     
     ptb.stop();
+    pause(1)
     daq.stop();
     
     % append information about the failure here.
