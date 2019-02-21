@@ -4,14 +4,14 @@
 % imaging sessions where to save the experimental schedule information
 
 % where to save the experimental schedule information
-schedule_file = 'C:\Users\Carol\Documents\Work\ctsitou\margrielab\visual_stimuli\schedule\sparse_noise_schedule_20190205.mat';
+schedule_file = 'C:\data\ctsitou\CX_79_3\sparse_noise_schedule_20190219.mat';
 
 type                    = 'SparseNoise';
 grid_size               = [12, 10];  % locations to present sparse noise
 colours                 = [0, 1];  % colours to present ([0 = black, 1 = white])
 n_repetitions           = 10;  % number of repeats of all direction/SF/TF combinations
 n_stim_per_session      = 480;  % MUST DIVIDE n_repetitions * grid_size(1) * grid_size(2)
-n_baseline_triggers     = 2;  % the number of triggers to wait at the beginning and end of stimulus sequence
+n_baseline_triggers     = 4;  % the number of triggers to wait at the beginning and end of stimulus sequence
 
 
 

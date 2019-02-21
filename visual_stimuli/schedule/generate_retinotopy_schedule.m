@@ -2,14 +2,14 @@
 % script to generate an experimental schedule for a retinotopy 
 
 % where to save the experimental schedule information
-schedule_file = 'C:\Users\Carol\Documents\Work\ctsitou\margrielab\visual_stimuli\schedule\retinotopy_schedule_20190205.mat';
+schedule_file = 'C:\data\ctsitou\CX_79_3\retinotopy_schedule_20190219.mat';
 
 type                    = 'Retinotopy';
 grid_size               = [4, 3];  % locations to present sparse noise, [x, y]
 n_repetitions           = 10;  % number of repeats of all direction/SF/TF combinations
 n_stim_per_session      = 120;  % number of stimuli to present each time we press GRAB in Scanimage
                                 % MUST DIVIDE n_repetitions * grid_size(1) * grid_size(2)
-n_baseline_triggers     = 2;  % the number of triggers to wait at the beginning and end of stimulus sequence
+n_baseline_triggers     = 4;  % the number of triggers to wait at the beginning and end of stimulus sequence
 
 waveform                = 'square';  % 'sine' or 'square'
 n_directions            = 8;  % number of directions the grating moves in

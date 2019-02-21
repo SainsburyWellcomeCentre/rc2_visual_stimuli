@@ -5,18 +5,18 @@
 
 
 % where to save the experimental schedule information
-schedule_file = 'C:\Users\Carol\Documents\Work\ctsitou\margrielab\visual_stimuli\schedule\sf_tf_schedule_20190205.mat';
+schedule_file = 'C:\data\ctsitou\CX_79_3\sf_tf_schedule_20190219.mat';
 
 type                    = 'DriftingGratings';
 n_directions            = 8;  % number of directions of the stimuli to present
 spatial_frequencies     = [0.01, 0.02, 0.04, 0.08, 0.16, 0.32];  % specify the spatial frequencies to present
 temporal_frequencies    = [0.5, 1, 2, 4, 8, 16];   % specify the temporal frequencies to present
 n_repetitions           = 9;  % number of repeats of all direction/SF/TF combinations
-n_stim_per_session      = 24;  % number of stimuli to present each time we press GRAB in Scanimage
+n_stim_per_session      = 48;  % number of stimuli to present each time we press GRAB in Scanimage
                                % MUST DIVIDE n_directions * # spatial
                                % frequencies * # temporal frequencies * #
                                % n_repetitions.
-n_baseline_triggers     = 2;  % the number of triggers to wait at the beginning and end of stimulus sequence
+n_baseline_triggers     = 4;  % the number of triggers to wait at the beginning and end of stimulus sequence
 sequence                = 'static_drift';  % 'static_drift' = static grating followed by drifting grating of same dir/SF/TF
 waveform                = 'sine';  % 'sine' or 'square'
 

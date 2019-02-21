@@ -7,7 +7,7 @@ classdef SetupInfo < handle
     properties
         screen_number
         distance_from_screen = 200
-        screen_size = [344, 193]
+        screen_size = [518.4, 324.0] % [344, 193]
     end
     
     properties (SetAccess = private, Hidden = true)

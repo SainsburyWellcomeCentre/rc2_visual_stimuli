@@ -154,10 +154,12 @@ try
     end
     
     ptb.stop();
+    daq.stop();
     
 catch ME
     
     ptb.stop();
+    daq.stop();
     
     % append information about the failure here.
     failure = trigger_count; %#ok<NASGU>
