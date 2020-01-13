@@ -18,7 +18,7 @@ if ptb.warp_on
 end
 
 % Information about the setup.
-setup                   = SetupInfo(ptb);
+setup                   = SetupInfo(ptb, options.screen_name);
 setup.set_screen_number(options.screen_number);
 
 % Load the pre-compiled schedule information

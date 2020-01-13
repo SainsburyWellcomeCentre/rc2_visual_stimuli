@@ -19,6 +19,7 @@ op.save_enabled         = true;
 
 %% SCREEN
 % the screen on which to present stimuli (psychtoolbox uses this)
+op.screen_name          = 'philips_278e';
 op.screen_number        = 2;
 
 % state whether to apply gamma correction and set path to a .mat file with
