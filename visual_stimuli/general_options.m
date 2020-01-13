@@ -38,6 +38,10 @@ if strcmp(stim_type, 'sparse_noise')
     % location of the experimental plan for sparse noise
     op.schedule_file  = 'C:\data\ctsitou\CX_79_2\sparse_noise_schedule_20190218.mat';
 
+elseif strcmp(stim_type, 'sparse_noise_allen')
+    
+    op.schedule_file = '';
+    
 elseif strcmp(stim_type, 'retinotopy')
     
     % location of the experimental plan for retinotopy
