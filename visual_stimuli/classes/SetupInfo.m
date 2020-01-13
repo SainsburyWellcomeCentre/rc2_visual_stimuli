@@ -53,6 +53,11 @@ classdef SetupInfo < handle
         end
         
         
+        function val = get_screen_half_angle(obj)
+            val = (180/pi)*atan(obj.screen_size(1)/obj.distance_from_screen);
+        end
+        
+        
         function val = get_mm_per_pixel(obj)
             val = (obj.screen_size ./ obj.screen_pixels);
         end
