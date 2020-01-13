@@ -123,7 +123,7 @@ try
             if daq.is_available
                 trigger_count = inputSingleScan(daq.ctr);
             else
-                if toc(t) > 2
+                if toc(t) > 10
                     trigger_count = trigger_count + 1;
                 end
             end
