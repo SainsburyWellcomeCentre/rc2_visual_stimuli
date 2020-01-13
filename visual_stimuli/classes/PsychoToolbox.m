@@ -12,6 +12,8 @@ classdef PsychoToolbox < handle
         original_gamma
         gamma_table
         calibration_on = false
+        warp_on = false
+        warp_file
     end
     
     properties (SetAccess = private, Hidden =  true)
@@ -67,6 +69,12 @@ classdef PsychoToolbox < handle
         function start(obj, screen_number)
             sca;
             HideCursor;
+            
+            if obj.warp_on && ~isempty(obj.warp_file)
+                PsychImaging('PrepareConfiguration');
+                PsychImaging('AddTask', 'AllViews', 'GeometryCorrection', obj.warp_file);
+            end
+            
             [obj.window, obj.window_rect] = PsychImaging('OpenWindow', screen_number, 0.001);
             
             if obj.calibration_on

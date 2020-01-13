@@ -21,6 +21,10 @@ op.screen_number        = 2;
 op.calibration_on       = true;
 op.calibration_file     = 'C:\Users\Analysis-NN7570699\Documents\MATLAB\margrielab\visual_stimuli\gamma\gamma_correction.mat';
 
+% whether to apply warp and mat file for warping parameters
+op.warp_on              = true;
+op.warp_file            = 'C:\Users\Carol\Desktop\visual_stimuli\visual_stimuli\warp\warp_philips_278e_2.mat';
+
 
 %% SCHEDULE FILE PATH
 if strcmp(stim_type, 'sparse_noise')

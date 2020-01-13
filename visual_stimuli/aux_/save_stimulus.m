@@ -38,6 +38,14 @@ stimulus.stimulus.n_repetitions             = schedule.n_repetitions;
 stimulus.stimulus.pd_location               = pd.location;
 stimulus.stimulus.pd_position               = pd.position;
 
+% save the warp contents.
+stimulus.stimulus.warp_on                   = ptb.warp_on;
+if ptb.warp_on
+    stimulus.stimulus.warp_contents         = load(ptb.warp_file);
+else
+    stimulus.stimulus.warp_contents         = [];
+end
+
 
 stimulus.source                             = options.schedule_file;
 stimulus.schedule                           = schedule;

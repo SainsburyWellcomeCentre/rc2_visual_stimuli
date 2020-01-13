@@ -11,6 +11,9 @@ stim_type = 'sf_tf';
 % load the current run options
 options             = general_options(stim_type);
 
+% force the warp to be off
+options.warp_on     = false;
+
 % setup generic objects and structures
 [ptb, setup, schedule] = general_setup(options);
 
