@@ -5,6 +5,11 @@ function op = general_options(stim_type)
 %       OUTPUTS:    structure containing options
 
 
+%% GENERAL
+% location of the git directory
+op.git_dir              = fullfile(pwd, '.git');
+
+
 %% SAVING
 % where to save information for each session (i.e. animal_id\date directory)
 op.save_dir             = 'C:\data\ctsitou\CX_79_2'; % this will save in e.g. 'C:\data\CX_00_0\19700101'

@@ -7,6 +7,10 @@ end
 
 this_directory = create_directory(stim_type, session_n, options);
 
+% store the latest commit in git
+[~, stimulus.git_version] = system(sprintf('git --git-dir=%s rev-parse HEAD', options.git_dir));
+
+% protocol specific parameters
 if strcmp(stim_type, 'sparse_noise')
     stimulus.type                           = 'SparseNoise';
     stimulus.grid_size                      = schedule.grid_size;
