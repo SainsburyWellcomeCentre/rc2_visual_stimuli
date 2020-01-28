@@ -64,6 +64,7 @@ schedule.n_directions           = n_directions;
 schedule.directions             = reshape(ori_, n_stim_per_session, n_sessions);
 schedule.spatial_frequencies    = reshape(sf_, n_stim_per_session, n_sessions);
 schedule.temporal_frequencies   = reshape(tf_, n_stim_per_session, n_sessions);
+schedule.start_phase            = 2*pi*rand(n_stim_per_session, n_sessions);
 schedule.n_repetitions          = n_repetitions;
 schedule.n_stim_per_session     = n_stim_per_session;
 schedule.n_sessions             = n_sessions;

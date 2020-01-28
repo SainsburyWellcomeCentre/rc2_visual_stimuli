@@ -35,7 +35,7 @@ for i = 1 : schedule.n_stim_per_session
     g.waveform          = schedule.waveform;
     g.cycles_per_degree = schedule.spatial_frequencies(i, session_n);
     g.orientation       = schedule.directions(i, session_n);
-    g.phase             = 0;
+    g.phase             = schedule.start_phase(i, session_n);
     
     seq.add_period(g);
     
@@ -44,7 +44,7 @@ for i = 1 : schedule.n_stim_per_session
     dg.cycles_per_degree = schedule.spatial_frequencies(i, session_n);
     dg.cycles_per_second = schedule.temporal_frequencies(i, session_n);
     dg.orientation      = schedule.directions(i, session_n);
-    dg.phase            = 0;
+    dg.phase            = schedule.start_phase(i, session_n);
     
     seq.add_period(dg);
 end
