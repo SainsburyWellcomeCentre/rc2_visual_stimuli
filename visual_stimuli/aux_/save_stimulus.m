@@ -94,5 +94,5 @@ if strcmp(stim_type, 'sparse_noise')
 elseif strcmp(stim_type, 'sf_tf')
     val = sprintf('sf_tf_%03i', session_n);
 elseif strcmp(stim_type, 'retinotopy')
-    val = sprintf('retintopy_%03i', session_n);
+    val = sprintf('retinotopy_%03i', session_n);
 end
