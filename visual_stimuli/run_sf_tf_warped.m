@@ -1,18 +1,15 @@
-function run_sf_tf(session_n)
-%%RUN_SF_TF(session_number)
+function run_sf_tf_warped(session_n)
+%%RUN_SF_TF_WARPED(session_number)
 %   runs a sequence of static and drifting gratings of different
 %   orientations and spatial and temporal frequencies.
 %   
 
 
 % Specify stimulus type to get the correct options.
-stim_type = 'sf_tf';
+stim_type           = 'sf_tf';
 
 % load the current run options
 options             = general_options(stim_type);
-
-% force the warp to be off
-options.warp_on     = false;
 
 % setup generic objects and structures
 [ptb, setup, schedule] = general_setup(options);
@@ -27,6 +24,14 @@ pd                  = Photodiode(ptb);
 % Create an object controlling the sequence of stimuli to present.
 seq                 = Sequence();
 
+% transformation of the cycles per degree if we are going to warp the
+% stimulus
+w = setup.screen_size(1);
+h = setup.screen_size(2);
+d = setup.distance_from_screen;
+
+
+
 % Store grey screens in the first two periods.
 for i = 1 : schedule.n_baseline_triggers
     seq.add_period(bck);
@@ -34,30 +39,44 @@ end
 % Store a static grating, and then a drifting grating.
 for i = 1 : schedule.n_stim_per_session
     
+    cpd                 = schedule.spatial_frequencies(i, session_n);
+    theta               = schedule.directions(i, session_n);
+    if (theta >= -(180/pi)*atan(h/w) & theta < (180/pi)*atan(h/w)) | ...
+            (theta >= 180 - (180/pi)*atan(h/w) & theta < 180 + (180/pi)*atan(h/w))
+        l                   = w/(2*cos(theta));
+    else
+        l                   = h/(2*sin(theta));
+    end
+    phi                 = (180/pi)* atan(l/d);
+    f                   = @(x)(pi/(360*atan(2*l/(4*phi*x*d))));
+    
     g                   = Grating(ptb, setup);
     g.waveform          = schedule.waveform;
-    g.cycles_per_degree = schedule.spatial_frequencies(i, session_n);
-    g.orientation       = schedule.directions(i, session_n);
-    g.phase             = schedule.start_phase(i, session_n);
+    g.cycles_per_degree = f(cpd);
+    g.orientation       = theta;
+    g.phase             = 0;
     
     seq.add_period(g);
     
     dg                  = DriftingGrating(ptb, setup);
     dg.waveform         = schedule.waveform;
-    dg.cycles_per_degree = schedule.spatial_frequencies(i, session_n);
+    dg.cycles_per_degree = f(cpd);
     dg.cycles_per_second = schedule.temporal_frequencies(i, session_n);
     dg.orientation      = schedule.directions(i, session_n);
-    dg.phase            = schedule.start_phase(i, session_n);
+    dg.phase            = 0;
     
     seq.add_period(dg);
 end
+
 % Store grey screens in the last two periods.
 for i = 1 : schedule.n_baseline_triggers
     seq.add_period(bck);
 end
 
+
 % Setup the data-acquisition hardware object
 daq = VisualStimulusDAQ();
+
 
 % Make sure that the number of periods we've created is equal to the number
 % of triggers in the schedule.
@@ -74,6 +93,8 @@ end
 try
     
     trigger_count = 0;
+    
+    default_dwell_time = 10;
     
     % Startup psychtoolbox
     ptb.start(setup.screen_number);
@@ -126,7 +147,7 @@ try
             if daq.is_available
                 trigger_count = inputSingleScan(daq.ctr);
             else
-                if toc(t) > 10
+                if toc(t) > default_dwell_time
                     trigger_count = trigger_count + 1;
                 end
             end
@@ -156,7 +177,9 @@ try
         end
     end
     
+    
     ptb.stop();
+    
     % The pause is essential for logging the AI data to file.....
     pause(1)
     daq.stop();

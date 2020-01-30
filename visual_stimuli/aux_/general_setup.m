@@ -5,6 +5,7 @@ function [ptb, setup, schedule] = general_setup(options)
 % Interface to psychtoolbox
 ptb                     = PsychoToolbox();
 ptb.calibration_on      = options.calibration_on;
+ptb.warp_on             = options.warp_on;
 
 % Load the gamma calibration file.
 if ptb.calibration_on
@@ -12,8 +13,12 @@ if ptb.calibration_on
     ptb.gamma_table 	= gamma_table;
 end
 
+if ptb.warp_on
+    ptb.warp_file       = options.warp_file;
+end
+
 % Information about the setup.
-setup                   = SetupInfo(ptb);
+setup                   = SetupInfo(ptb, options.screen_name);
 setup.set_screen_number(options.screen_number);
 
 % Load the pre-compiled schedule information

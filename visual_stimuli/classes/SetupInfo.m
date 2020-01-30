@@ -7,7 +7,11 @@ classdef SetupInfo < handle
     properties
         screen_number
         distance_from_screen = 200
-        screen_size = [521.4, 293.3] % [518.4, 324.0] [344, 193] 
+        screen_name
+    end
+    
+    properties (Dependent = true)
+        screen_size
     end
     
     properties (SetAccess = private, Hidden = true)
@@ -21,14 +25,20 @@ classdef SetupInfo < handle
     
     methods
         
-        function obj = SetupInfo(ptb, screen_number)
+        function obj = SetupInfo(ptb, screen_name, screen_number)
             obj.ptb = ptb;
+            obj.screen_name = screen_name;
             VariableDefault('screen_number', max(obj.ptb.screens))
             obj.set_screen_number(screen_number);
         end
         
         
-        function val = get_screen_pixels(obj)    
+        function val = get.screen_size(obj)
+            val = screen_sizes(obj.screen_name);
+        end
+        
+        
+        function val = get_screen_pixels(obj)
             val = obj.ptb.screen_pixels();
             idx = obj.screen_number == obj.ptb.screens;
             val = val(idx, :);
@@ -40,6 +50,11 @@ classdef SetupInfo < handle
             obj.screen_pixels = obj.get_screen_pixels();
             obj.mm_per_pixel = obj.get_mm_per_pixel();
             obj.diagonal = ceil(sqrt(sum(obj.screen_pixels.^2)));
+        end
+        
+        
+        function val = get_screen_half_angle(obj)
+            val = (180/pi)*atan(obj.screen_size(1)/obj.distance_from_screen);
         end
         
         

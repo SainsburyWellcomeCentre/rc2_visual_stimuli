@@ -10,6 +10,7 @@ function run_gamma_test()
 levels = 0:0.2:1;
 
 % Specify stimulus type to get the correct options.
+screen_name         = 'philips_278e';
 screen_number       = 2;
 calibration_on      = true;
 calibration_file    = 'gamma\gamma_correction.mat';
@@ -25,7 +26,7 @@ if ptb.calibration_on
 end
 
 % Information about the setup.
-setup                       = SetupInfo(ptb);
+setup                       = SetupInfo(ptb, screen_name);
 setup.set_screen_number(screen_number);
 
 % Create an object controlling the background

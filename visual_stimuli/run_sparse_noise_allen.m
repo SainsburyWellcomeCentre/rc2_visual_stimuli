@@ -1,67 +1,44 @@
-function run_sf_tf(session_n)
-%%RUN_SF_TF(session_number)
-%   runs a sequence of static and drifting gratings of different
-%   orientations and spatial and temporal frequencies.
-%   
-
+function run_sparse_noise_allen(session_n)
 
 % Specify stimulus type to get the correct options.
-stim_type = 'sf_tf';
+stim_type           = 'sparse_noise_allen';
 
 % load the current run options
 options             = general_options(stim_type);
 
-% force the warp to be off
-options.warp_on     = false;
-
 % setup generic objects and structures
 [ptb, setup, schedule] = general_setup(options);
 
-% Create an object controlling grey screens
+% Create an object controlling the background
 bck                 = Background(ptb);
 bck.colour          = ptb.mid_grey_index(setup.screen_number);
 
 % Create object controlling photodiode box
 pd                  = Photodiode(ptb);
 
-% Create an object controlling the sequence of stimuli to present.
-seq                 = Sequence();
+% Create a square
+sq                  = Square(ptb, setup);
 
-% Store grey screens in the first two periods.
-for i = 1 : schedule.n_baseline_triggers
-    seq.add_period(bck);
-end
-% Store a static grating, and then a drifting grating.
-for i = 1 : schedule.n_stim_per_session
-    
-    g                   = Grating(ptb, setup);
-    g.waveform          = schedule.waveform;
-    g.cycles_per_degree = schedule.spatial_frequencies(i, session_n);
-    g.orientation       = schedule.directions(i, session_n);
-    g.phase             = schedule.start_phase(i, session_n);
-    
-    seq.add_period(g);
-    
-    dg                  = DriftingGrating(ptb, setup);
-    dg.waveform         = schedule.waveform;
-    dg.cycles_per_degree = schedule.spatial_frequencies(i, session_n);
-    dg.cycles_per_second = schedule.temporal_frequencies(i, session_n);
-    dg.orientation      = schedule.directions(i, session_n);
-    dg.phase            = schedule.start_phase(i, session_n);
-    
-    seq.add_period(dg);
-end
-% Store grey screens in the last two periods.
-for i = 1 : schedule.n_baseline_triggers
-    seq.add_period(bck);
-end
+% Determine the location of each square
+cols                = schedule.colours(:, session_n);
+locs                = schedule.locations(:, session_n);
+x_bounds            = schedule.x_bound;
+y_bounds            = schedule.y_bound;
+px_per_square       = schedule.px_per_square;
 
-% Setup the data-acquisition hardware object
-daq = VisualStimulusDAQ();
+cols = [arrayfun(@(x)(ptb.mid_grey_index(setup.screen_number)), 1:schedule.n_baseline_triggers, 'uniformoutput', false)'; ...
+        cols; ...
+        arrayfun(@(x)(ptb.mid_grey_index(setup.screen_number)), 1:schedule.n_baseline_triggers, 'uniformoutput', false)';]; % ptb.mid_grey_index(setup.screen_number)
+locs = [cell(schedule.n_baseline_triggers, 1); locs; cell(schedule.n_baseline_triggers, 1)];
+
 
 % Make sure that the number of periods we've created is equal to the number
 % of triggers in the schedule.
-assert(seq.n_periods == schedule.total_n_triggers);
+assert(length(locs) == schedule.total_n_triggers);
+
+
+% Setup the data-acquisition hardware object
+daq = VisualStimulusDAQ();
 
 % Save relevant information here, for each session
 this_directory = save_stimulus(stim_type, session_n, options, schedule, ptb, setup, pd, daq);
@@ -77,9 +54,6 @@ try
     
     % Startup psychtoolbox
     ptb.start(setup.screen_number);
-    
-    % Initialize each stimulus in the sequence.
-    seq.initialize();
     
     % Start data acquisition logging.
     daq.start();
@@ -107,12 +81,17 @@ try
     
     for period = 1 : schedule.total_n_triggers
         t = tic;
-        
         while trigger_count < period + 1
             
             % Update the current stimulus and buffer it.
-            seq.period{period}.update();
-            seq.period{period}.buffer();
+%             pos = grid.get_position(locs(period));
+            pos = [x_bounds(locs{period}); y_bounds(locs{period});
+                x_bounds(locs{period})+px_per_square(1); y_bounds(locs{period})+px_per_square(2)];
+            
+            %pos = [x_bounds(period), y_bounds(period), x_bounds(period)+px_per_square(1), y_bounds(period)+px_per_square(2)];
+            sq.position = pos;
+            sq.colour = repmat(cols{period}, 3, 1);
+            sq.buffer();
             
             % Alternate the photodiode colour every trigger.
             pd.colour = mod(period, 2);
@@ -126,7 +105,7 @@ try
             if daq.is_available
                 trigger_count = inputSingleScan(daq.ctr);
             else
-                if toc(t) > 10
+                if toc(t) > 0.5
                     trigger_count = trigger_count + 1;
                 end
             end
@@ -164,14 +143,22 @@ try
 catch ME
     
     ptb.stop();
+    % The pause is essential for logging the AI data to file.....
     pause(1)
     daq.stop();
     
     % append information about the failure here.
     failure = trigger_count; %#ok<NASGU>
     msg = ME.message; %#ok<NASGU>
-    save(fullfile(this_directory, 'stimulus_info.mat'), ...
-        'failure', 'msg', '-append')
+    if options.save_enabled
+        save(fullfile(this_directory, 'stimulus_info.mat'), 'failure', 'msg', '-append')
+    end
     
     rethrow(ME);
 end
+
+
+
+
+
+

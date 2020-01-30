@@ -7,11 +7,24 @@ end
 
 this_directory = create_directory(stim_type, session_n, options);
 
+% store the latest commit in git
+[~, stimulus.git_version] = system(sprintf('git --git-dir=%s rev-parse HEAD', options.git_dir));
+
+% protocol specific parameters
 if strcmp(stim_type, 'sparse_noise')
     stimulus.type                           = 'SparseNoise';
     stimulus.grid_size                      = schedule.grid_size;
     stimulus.stimulus.positions             = schedule.locations(:, session_n);
     stimulus.stimulus.colours               = schedule.colours(:, session_n);
+    stimulus.stimulus.n_repetitions         = schedule.n_repetitions;
+elseif strcmp(stim_type, 'sparse_noise_allen')
+    stimulus.type                           = 'SparseNoiseAllen';
+    stimulus.grid_size                      = schedule.grid_size;
+    stimulus.stimulus.positions             = schedule.locations(:, session_n);
+    stimulus.stimulus.colours               = schedule.colours(:, session_n);
+    stimulus.stimulus.x_bound               = schedule.x_bound(:, session_n);
+    stimulus.stimulus.y_bound               = schedule.y_bound(:, session_n);
+    stimulus.stimulus.px_per_square         = schedule.px_per_square;
 elseif strcmp(stim_type, 'sf_tf')
     stimulus.type                           = 'DriftingGratings';
     stimulus.stimulus.cycles_per_visual_degree = schedule.spatial_frequencies(:, session_n);
@@ -20,6 +33,7 @@ elseif strcmp(stim_type, 'sf_tf')
     stimulus.stimulus.n_orientations        = schedule.n_directions;
     stimulus.stimulus.grey_or_static        = schedule.sequence;
     stimulus.stimulus.waveform              = schedule.waveform;
+    stimulus.stimulus.n_repetitions         = schedule.n_repetitions;
 elseif strcmp(stim_type, 'retinotopy')
     stimulus.type                           = 'Retinotopy';
     stimulus.grid_size                      = schedule.grid_size;
@@ -29,14 +43,22 @@ elseif strcmp(stim_type, 'retinotopy')
     stimulus.stimulus.spatial_frequency     = schedule.spatial_frequency;
     stimulus.stimulus.temporal_frequency    = schedule.temporal_frequency;
     stimulus.stimulus.waveform              = schedule.waveform;
+    stimulus.stimulus.n_repetitions         = schedule.n_repetitions;
 end
 
 
 stimulus.stimulus.n_baseline_triggers       = schedule.n_baseline_triggers;
 stimulus.stimulus.total_n_triggers          = schedule.total_n_triggers;
-stimulus.stimulus.n_repetitions             = schedule.n_repetitions;
 stimulus.stimulus.pd_location               = pd.location;
 stimulus.stimulus.pd_position               = pd.position;
+
+% save the warp contents.
+stimulus.stimulus.warp_on                   = ptb.warp_on;
+if ptb.warp_on
+    stimulus.stimulus.warp_contents         = load(ptb.warp_file);
+else
+    stimulus.stimulus.warp_contents         = [];
+end
 
 
 stimulus.source                             = options.schedule_file;
@@ -91,6 +113,8 @@ end
 function val = subdirectory(stim_type, session_n)
 if strcmp(stim_type, 'sparse_noise')
     val = sprintf('sparse_noise_%03i', session_n);
+elseif strcmp(stim_type, 'sparse_noise_allen')
+    val = sprintf('sparse_noise_allen_%03i', session_n);
 elseif strcmp(stim_type, 'sf_tf')
     val = sprintf('sf_tf_%03i', session_n);
 elseif strcmp(stim_type, 'retinotopy')
