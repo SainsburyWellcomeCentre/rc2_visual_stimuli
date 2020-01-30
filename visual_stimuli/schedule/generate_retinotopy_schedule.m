@@ -2,7 +2,7 @@
 % script to generate an experimental schedule for a retinotopy 
 
 % where to save the experimental schedule information
-schedule_file = 'C:\data\ctsitou\CX_79_3\retinotopy_schedule_20190219.mat';
+schedule_file = 'C:\data\ctsitou\BY_317_2_hemisphere_left_monitor_left\retinotopy_schedule_20200129.mat';
 
 type                    = 'Retinotopy';
 grid_size               = [4, 3];  % locations to present sparse noise, [x, y]

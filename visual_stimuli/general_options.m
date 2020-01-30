@@ -7,7 +7,7 @@ function op = general_options(stim_type)
 
 %% SAVING
 % where to save information for each session (i.e. animal_id\date directory)
-op.save_dir             = 'C:\data\ctsitou\CX_79_2'; % this will save in e.g. 'C:\data\CX_00_0\19700101'
+op.save_dir             = 'C:\data\ctsitou\BY_317_2_hemisphere_left_monitor_left'; % this will save in e.g. 'C:\data\CX_00_0\19700101'
 
 % whether to save information at all
 op.save_enabled         = true;
@@ -26,15 +26,15 @@ op.calibration_file     = 'C:\Users\Analysis-NN7570699\Documents\MATLAB\margriel
 if strcmp(stim_type, 'sparse_noise')
     
     % location of the experimental plan for sparse noise
-    op.schedule_file  = 'C:\data\ctsitou\CX_79_2\sparse_noise_schedule_20190218.mat';
+    op.schedule_file  = 'C:\data\ctsitou\BY_317_2_hemisphere_right_monitor_left\sparse_noise_schedule_20200129.mat';
 
 elseif strcmp(stim_type, 'retinotopy')
     
     % location of the experimental plan for retinotopy
-    op.schedule_file  = 'C:\data\ctsitou\CX_79_2\retinotopy_schedule_20190218.mat';
+    op.schedule_file  = 'C:\data\ctsitou\BY_317_2_hemisphere_left_monitor_left\retinotopy_schedule_20200129.mat';
 
 elseif strcmp(stim_type, 'sf_tf')
     
     % location of the experimental plan for SF/TF experiments
-    op.schedule_file  = 'C:\data\ctsitou\CX_79_2\sf_tf_schedule_20190218.mat';
+    op.schedule_file  = 'C:\data\ctsitou\BY_317_2_hemisphere_right_monitor_left\sf_tf_schedule_20200129.mat';%'C:\data\ctsitou\CX_79_4\sf_tf_schedule_20190306.mat';
 end

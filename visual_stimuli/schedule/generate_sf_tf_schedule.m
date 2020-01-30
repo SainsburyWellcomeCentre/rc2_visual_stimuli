@@ -5,7 +5,7 @@
 
 
 % where to save the experimental schedule information
-schedule_file = 'C:\data\ctsitou\CX_79_3\sf_tf_schedule_20190219.mat';
+schedule_file = 'C:\data\ctsitou\BY_317_2\sf_tf_schedule_20200129.mat';
 
 type                    = 'DriftingGratings';
 n_directions            = 8;  % number of directions of the stimuli to present

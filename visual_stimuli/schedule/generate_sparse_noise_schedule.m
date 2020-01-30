@@ -4,7 +4,7 @@
 % imaging sessions where to save the experimental schedule information
 
 % where to save the experimental schedule information
-schedule_file = 'C:\data\ctsitou\CX_79_3\sparse_noise_schedule_20190219.mat';
+schedule_file = 'C:\data\ctsitou\BY_317_2\sparse_noise_schedule_20200129.mat';
 
 type                    = 'SparseNoise';
 grid_size               = [12, 10];  % locations to present sparse noise
