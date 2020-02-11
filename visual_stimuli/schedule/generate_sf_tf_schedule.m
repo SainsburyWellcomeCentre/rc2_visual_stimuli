@@ -11,14 +11,21 @@ type                    = 'DriftingGratings';
 n_directions            = 8;  % number of directions of the stimuli to present
 spatial_frequencies     = [0.01, 0.02, 0.04, 0.08, 0.16, 0.32];  % specify the spatial frequencies to present
 temporal_frequencies    = [0.5, 1, 2, 4, 8, 16];   % specify the temporal frequencies to present
-n_repetitions           = 9;  % number of repeats of all direction/SF/TF combinations
+n_repetitions           = 4;  % number of repeats of all direction/SF/TF combinations
+                              % if the sequence type is 'grey_static_drift_switch'
+                              % then be careful here... it counts
+                              % static-then-drift and drift-then-static as
+                              % separate stimuli (so you have twice the
+                              % number of stimuli)
 n_stim_per_session      = 48;  % number of stimuli to present each time we press GRAB in Scanimage
                                % MUST DIVIDE n_directions * # spatial
                                % frequencies * # temporal frequencies * #
                                % n_repetitions.
 n_baseline_triggers     = 4;  % the number of triggers to wait at the beginning and end of stimulus sequence
-sequence                = 'grey_static_drift';  % 'static_drift' = static grating followed by drifting grating of same dir/SF/TF
-                                                % 'grey_static_drift' = put a grey screen between each stimulus 
+sequence                = 'grey_static_drift_switch';  % 'static_drift' = static grating followed by drifting grating of same dir/SF/TF
+                                                % 'grey_static_drift' = put a grey screen between each stimulus
+                                                % 'grey_static_drift_switch' =  grey screen before static/drift, but drift can come before static
+                                                %                       again this is randomized
 waveform                = 'sine';  % 'sine' or 'square'
 
 
@@ -29,7 +36,11 @@ directions = linspace(0, 360, n_directions+1);
 directions = directions(1:end-1);
 
 % Create matrix with all combinations of direction, SF and TF.
-[ori, sf, tf] = ndgrid(directions, spatial_frequencies, temporal_frequencies);
+[ori, sf, tf, drift_order] = ndgrid(directions, spatial_frequencies, temporal_frequencies, 2);
+if strcmp(sequence, 'grey_static_drift_switch')
+    [ori, sf, tf, drift_order] = ndgrid(directions, spatial_frequencies, temporal_frequencies, [1, 2]);
+end
+
 
 % Total number of stimuli is this 
 n_stimuli = numel(ori) * n_repetitions;
@@ -45,11 +56,13 @@ n_sessions = n_stimuli / n_stim_per_session;
 ori_ = [];
 sf_ = [];
 tf_ = [];
+order_ = [];
 for j = 1 : n_repetitions
     idx = randperm(numel(ori))';
     ori_ = cat(1, ori_, ori(idx));
     sf_ = cat(1, sf_, sf(idx));
     tf_ = cat(1, tf_, tf(idx));
+    order_ = cat(1, order_, drift_order(idx));
 end
 
 if strcmp(sequence, 'static_drift')
@@ -58,6 +71,11 @@ if strcmp(sequence, 'static_drift')
     % sequence
     total_n_triggers = 2*n_stim_per_session + 2*n_baseline_triggers;
 elseif strcmp(sequence, 'grey_static_drift')
+    % 3 triggers per stimulus (grey + static + drifting periods)
+    % 2 baseline periods: one at beginning and one at end of stimulus
+    % sequence
+    total_n_triggers = 3*n_stim_per_session + 2*n_baseline_triggers;
+elseif strcmp(sequence, 'grey_static_drift_switch')
     % 3 triggers per stimulus (grey + static + drifting periods)
     % 2 baseline periods: one at beginning and one at end of stimulus
     % sequence
@@ -78,6 +96,7 @@ schedule.n_baseline_triggers    = n_baseline_triggers;
 schedule.total_n_triggers       = total_n_triggers;
 schedule.sequence               = sequence;
 schedule.waveform               = waveform;
+schedule.drift_order            = reshape(order_, n_stim_per_session, n_sessions);
 
 % Save the schedule in specified location.
 % If file exists, check before overwriting.

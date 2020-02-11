@@ -4,9 +4,11 @@ function run_sf_tf(session_n)
 %   orientations and spatial and temporal frequencies.
 %   
 
+% amount of time to wait between updates if there is no hardware trigger
+default_interval    = 10;
 
 % Specify stimulus type to get the correct options.
-stim_type = 'sf_tf';
+stim_type           = 'sf_tf';
 
 % load the current run options
 options             = general_options(stim_type);
@@ -27,15 +29,25 @@ pd                  = Photodiode(ptb);
 % Create an object controlling the sequence of stimuli to present.
 seq                 = Sequence();
 
-% Store grey screens in the first two periods.
+% stim type (grey, static or drift)
+stim_id           = [];
+
+% whether to track the type of stimulus
+track_stimulus_id = strcmp(schedule.sequence, 'grey_static_drift_switch');
+
+% Store grey screens in the first n_baseline_triggers periods.
 for i = 1 : schedule.n_baseline_triggers
     seq.add_period(bck);
+    stim_id(end+1) = 0; %#ok<*AGROW>
 end
+
 % Store a static grating, and then a drifting grating.
 for i = 1 : schedule.n_stim_per_session
     
-    if strcmp(schedule.sequence, 'grey_static_drift')
+    if strcmp(schedule.sequence, 'grey_static_drift') || ...
+            strcmp(schedule.sequence, 'grey_static_drift_switch')
         seq.add_period(bck);
+        stim_id(end+1) = 0;
     end
     
     g                   = Grating(ptb, setup);
@@ -44,8 +56,6 @@ for i = 1 : schedule.n_stim_per_session
     g.orientation       = schedule.directions(i, session_n);
     g.phase             = schedule.start_phase(i, session_n);
     
-    seq.add_period(g);
-    
     dg                  = DriftingGrating(ptb, setup);
     dg.waveform         = schedule.waveform;
     dg.cycles_per_degree = schedule.spatial_frequencies(i, session_n);
@@ -53,11 +63,31 @@ for i = 1 : schedule.n_stim_per_session
     dg.orientation      = schedule.directions(i, session_n);
     dg.phase            = schedule.start_phase(i, session_n);
     
-    seq.add_period(dg);
+    % the field drift order was added at a later time
+    if ~isfield(schedule, 'drift_order')
+        seq.add_period(g);
+        stim_id(end+1) = 1;
+        seq.add_period(dg);
+        stim_id(end+1) = 2;
+    else
+        if schedule.drift_order(i, session_n) == 2
+            seq.add_period(g);
+            stim_id(end+1) = 1;
+            seq.add_period(dg);
+            stim_id(end+1) = 2;
+        else
+            seq.add_period(dg);
+            stim_id(end+1) = 2;
+            seq.add_period(g);
+            stim_id(end+1) = 1;
+        end
+    end
 end
-% Store grey screens in the last two periods.
+
+% Store grey screens in the last n_baseline_triggers periods.
 for i = 1 : schedule.n_baseline_triggers
     seq.add_period(bck);
+    stim_id(end+1) = 0;
 end
 
 % Setup the data-acquisition hardware object
@@ -101,12 +131,12 @@ try
         end
         trigger_count = inputSingleScan(daq.ctr);
     else
-        pause(2);
+        pause(default_interval);
         trigger_count = 1;
     end
     
     % calculate approximate intervals for last period.
-    approx_interval = 2;
+    approx_interval = default_interval;
     interval_started = 0;
     
     for period = 1 : schedule.total_n_triggers
@@ -114,9 +144,29 @@ try
         
         while trigger_count < period + 1
             
-            % Update the current stimulus and buffer it.
-            seq.period{period}.update();
-            seq.period{period}.buffer();
+            % If we are tracking the stimulus
+            if track_stimulus_id && period > 1
+                
+                % If the static grating comes second in a sequence, 
+                % we just keep updating the last frame of the drifting
+                % grating.
+                % This is a hack to avoid having to prespecify the phase of
+                % the static grating (that is, it is difficult to precalculate 
+                % which phase the drifting grating will end on).
+                if stim_id(period) == 1 && stim_id(period-1) == 2
+                    % Buffer the drifting grating but do not update it.
+                    seq.period{period-1}.buffer();
+                else
+                    % Update the current stimulus and buffer it.
+                    seq.period{period}.update();
+                    seq.period{period}.buffer();
+                end
+            else
+                % Update the current stimulus and buffer it.
+                seq.period{period}.update();
+                seq.period{period}.buffer();
+            end
+            
             
             % Alternate the photodiode colour every trigger.
             pd.colour = mod(period, 2);
@@ -130,7 +180,7 @@ try
             if daq.is_available
                 trigger_count = inputSingleScan(daq.ctr);
             else
-                if toc(t) > 10
+                if toc(t) > default_interval
                     trigger_count = trigger_count + 1;
                 end
             end
