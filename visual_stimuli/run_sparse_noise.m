@@ -76,6 +76,7 @@ try
     % calculate approximate intervals for last period.
     approx_interval = 2;
     interval_started = 0;
+    t_interval = tic;
     
     for period = 1 : schedule.total_n_triggers
         t = tic;
