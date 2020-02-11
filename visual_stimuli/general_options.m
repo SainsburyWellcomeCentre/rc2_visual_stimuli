@@ -28,8 +28,8 @@ op.calibration_on       = true;
 op.calibration_file     = 'C:\Users\Analysis-NN7570699\Documents\MATLAB\margrielab\visual_stimuli\gamma\gamma_correction.mat';
 
 % whether to apply warp and mat file for warping parameters
-op.warp_on              = true;
-op.warp_file            = 'C:\Users\Carol\Desktop\visual_stimuli\visual_stimuli\warp\warp_philips_278e_2.mat';
+op.warp_on              = false;
+op.warp_file            = 'C:\Users\Analysis-NN7570699\Documents\MATLAB\margrielab\visual_stimuli\warp\warp_samsung_cfg73.mat';
 
 
 %% SCHEDULE FILE PATH

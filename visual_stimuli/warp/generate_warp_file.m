@@ -6,12 +6,12 @@
 
 % filename to save warp parameters as
 % we also pass this resulting mat file to psychtoolbox
-fname = 'warp_philips_278e_2.mat';
+fname = 'warp_samsung_cfg73.mat';
 
 % width of the screen in mm
-w = 597.12;%368;
+w = 521.4;
 % height of the screen in mm
-h = 335.88;%203;
+h = 293.3;
 % distance of eye from the centre of the screen
 d = 200;
 

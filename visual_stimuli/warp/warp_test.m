@@ -4,17 +4,17 @@
 %
 
 % Specify stimulus type to get the correct options.
-screen_name                 = 'philips_278e';
+screen_name                 = 'samsung_cfg73';
 screen_number               = 2;
 warp_on                     = true;
-warp_file                   = 'warp\warp_philips_278e_2.mat';
+warp_file                   = 'warp\warp_samsung_cfg73.mat';
 
 
 % width of the screen in mm
-w = 597.12;
+w = 521.4;
 % height of the screen in mm
-h = 335.88;
-% distance of eye from the centre of the screen 
+h = 293.3;
+% distance of eye from the centre of the screen
 d = 200;
 
 % number of pixel width and height
