@@ -7,7 +7,7 @@ function op = general_options(stim_type)
 
 %% GENERAL
 % location of the git directory
-op.git_dir              = fullfile(pwd, '.git');
+op.git_dir              = fullfile(fileparts(fileparts(mfilename('fullpath'))), '.git');
 
 
 %% SAVING
