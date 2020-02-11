@@ -34,6 +34,10 @@ end
 % Store a static grating, and then a drifting grating.
 for i = 1 : schedule.n_stim_per_session
     
+    if strcmp(schedule.sequence, 'grey_static_drift')
+        seq.add_period(bck);
+    end
+    
     g                   = Grating(ptb, setup);
     g.waveform          = schedule.waveform;
     g.cycles_per_degree = schedule.spatial_frequencies(i, session_n);

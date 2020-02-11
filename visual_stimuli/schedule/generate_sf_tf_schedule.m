@@ -17,7 +17,8 @@ n_stim_per_session      = 48;  % number of stimuli to present each time we press
                                % frequencies * # temporal frequencies * #
                                % n_repetitions.
 n_baseline_triggers     = 4;  % the number of triggers to wait at the beginning and end of stimulus sequence
-sequence                = 'static_drift';  % 'static_drift' = static grating followed by drifting grating of same dir/SF/TF
+sequence                = 'grey_static_drift';  % 'static_drift' = static grating followed by drifting grating of same dir/SF/TF
+                                                % 'grey_static_drift' = put a grey screen between each stimulus 
 waveform                = 'sine';  % 'sine' or 'square'
 
 
@@ -56,6 +57,11 @@ if strcmp(sequence, 'static_drift')
     % 2 baseline periods: one at beginning and one at end of stimulus
     % sequence
     total_n_triggers = 2*n_stim_per_session + 2*n_baseline_triggers;
+elseif strcmp(sequence, 'grey_static_drift')
+    % 3 triggers per stimulus (grey + static + drifting periods)
+    % 2 baseline periods: one at beginning and one at end of stimulus
+    % sequence
+    total_n_triggers = 3*n_stim_per_session + 2*n_baseline_triggers;
 end
 
 % Collect relevant information in a structure to save.
