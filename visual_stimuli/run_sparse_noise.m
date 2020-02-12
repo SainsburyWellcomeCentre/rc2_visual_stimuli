@@ -1,5 +1,7 @@
 function run_sparse_noise(session_n)
 
+Screen('Preference', 'SkipSyncTests', 1);
+
 % Specify stimulus type to get the correct options.
 stim_type = 'sparse_noise';
 

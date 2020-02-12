@@ -20,7 +20,7 @@ op.save_enabled         = true;
 %% SCREEN
 % the screen on which to present stimuli (psychtoolbox uses this)
 op.screen_name          = 'samsung_cfg73';
-op.screen_number        = 2;
+op.screen_number        = 1;
 
 % state whether to apply gamma correction and set path to a .mat file with
 % a gamma table to apply
@@ -28,7 +28,7 @@ op.calibration_on       = true;
 op.calibration_file     = 'C:\Users\Analysis-NN7570699\Documents\MATLAB\margrielab\visual_stimuli\gamma\gamma_correction.mat';
 
 % whether to apply warp and mat file for warping parameters
-op.warp_on              = false;
+op.warp_on              = true;
 op.warp_file            = 'C:\Users\Analysis-NN7570699\Documents\MATLAB\margrielab\visual_stimuli\warp\warp_samsung_cfg73.mat';
 
 

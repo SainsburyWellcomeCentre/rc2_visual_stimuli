@@ -4,6 +4,7 @@ function run_sf_tf_warped(session_n)
 %   orientations and spatial and temporal frequencies.
 %   
 
+Screen('Preference', 'SkipSyncTests', 1);
 
 % Specify stimulus type to get the correct options.
 stim_type           = 'sf_tf';

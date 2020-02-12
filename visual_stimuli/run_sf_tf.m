@@ -4,6 +4,9 @@ function run_sf_tf(session_n)
 %   orientations and spatial and temporal frequencies.
 %   
 
+%%
+Screen('Preference', 'SkipSyncTests', 1);
+
 % amount of time to wait between updates if there is no hardware trigger
 default_interval    = 10;
 

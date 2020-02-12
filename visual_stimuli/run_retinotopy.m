@@ -2,6 +2,8 @@ function run_retinotopy(session_n)
 %%RUN_RETINOTOPY(session_number)
 %   runs a
 
+Screen('Preference', 'SkipSyncTests', 1);
+
 % Specify stimulus type to get the correct options.
 stim_type = 'retinotopy';
 
