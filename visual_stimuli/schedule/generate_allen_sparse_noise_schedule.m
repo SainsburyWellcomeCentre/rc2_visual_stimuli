@@ -7,12 +7,12 @@
 %  GRID SIZE IS DETERMINED BY THIS.
 
 % where to save the experimental schedule information
-schedule_file = 'sparse_noise_allen_schedule_20191122.mat';
+schedule_file = 'sparse_noise_allen_schedule_20200212.mat';
 
 type                    = 'SparseNoiseAllen';
 square_size             = 4;    % visual degrees
 
-screen_name             = 'philips_278e';
+screen_name             = 'samsung_cfg73';
 
 [screen_size, screen_pix] = screen_sizes(screen_name);
 distance_to_screen      = 200;
