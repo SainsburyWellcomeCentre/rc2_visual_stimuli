@@ -3,9 +3,11 @@
 %   
 %
 
+Screen('Preference', 'SkipSyncTests', 1);
+
 % Specify stimulus type to get the correct options.
 screen_name                 = 'samsung_cfg73';
-screen_number               = 2;
+screen_number               = 1;
 warp_on                     = true;
 warp_file                   = 'warp\warp_samsung_cfg73.mat';
 

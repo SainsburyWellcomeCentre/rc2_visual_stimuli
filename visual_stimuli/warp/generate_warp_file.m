@@ -60,6 +60,9 @@ scal.tcoords(:, :, 2) = Y__;
 % also required for psychtoolbox
 warptype = 'CSVDisplayList';
 
+scal.screenNumber = 1;
+scal.useUnitDisplayCoords = false;
+
 % Save the two structures
 save(fname, 'warptype', 'scal')
 
