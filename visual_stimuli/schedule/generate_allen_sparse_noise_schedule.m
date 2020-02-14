@@ -18,9 +18,10 @@ screen_name             = 'samsung_cfg73';
 distance_to_screen      = 200;
 
 colours                 = [0, 1];  % colours to present ([0 = black, 1 = white])
-n_sessions              = 5;  % number of sessions
-n_stim_per_session      = 400;  % this number MUST DIVIDE n_repetitions * grid_size(1) * grid_size(2)
-n_baseline_triggers     = 4;  % the number of triggers to wait at the beginning and end of stimulus sequence
+n_sessions              = 5;        % number of sessions
+n_stim_per_session      = 1600;      % number of these stimuli to present per session
+n_baseline_triggers     = 40;       % the number of triggers to wait at the beginning and end of stimulus sequence
+                                    % duration will be determined by the trigger interval used during acquisition
 
 
 %%
