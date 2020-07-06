@@ -53,7 +53,7 @@ classdef Photodiode < handle
             if obj.ptb.warp_on
                 if strcmp(obj.warp_style, 'Oval')
                     Screen('FillOval', obj.ptb.window, obj.colour, obj.position);
-                elseif strcmp(obj.warp_style, 'Poly')
+                elseif strcmp(obj.warp_style, 'Polygon')
                     Screen('FillPoly', obj.ptb.window, obj.colour, obj.position);
                 end
             else

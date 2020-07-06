@@ -13,10 +13,10 @@ square_size = 5; % deg
 w = 280;
 % height of the screen in mm
 h = 180;
-% distance of eye from the centre of the screen
+% distance of eye from the screen
 d = 50;
 
-% where mouse eye is opposite
+% location on screen of closest point to eye
 centre_w = 50;
 centre_h = h-10;
 
