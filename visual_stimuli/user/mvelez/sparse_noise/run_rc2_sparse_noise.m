@@ -4,9 +4,9 @@ prot_fname = 'sparse_noise_warped_rc2_20200708.mat';
 
 % variables
 screen_number           = 2;        % s
-baseline_duration       = 4;        % s
-wait_for_start_trigger  = false;  % wait for start trigger, true or false
+baseline_duration       = 10;        % s
 gamma_correction_file = 'gamma_correction_sony_projector.mat';
+wait_for_start_trigger  = true;  % wait for start trigger, true or false
 
 % NI-DAQ info
 nidaq_dev               = 'Dev1';

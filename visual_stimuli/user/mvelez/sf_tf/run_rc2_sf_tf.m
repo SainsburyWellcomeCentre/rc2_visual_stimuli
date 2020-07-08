@@ -1,5 +1,5 @@
 % for testing spatial frequencies
-test_on = true;
+test_on = false;
 
 % file where protocol is saved
 prot_fname = 'sf_tf_rc2_20200706.mat';
@@ -11,11 +11,11 @@ end
 
 % variables
 screen_number           = 2;        % s
-baseline_duration       = 4;        % s
+baseline_duration       = 10;        % s
 drift_duration          = 2.5;      % s
 distance_from_screen    = 50;       % mm
 screen_name             = 'sony_projector';
-wait_for_start_trigger  = false;  % wait for start trigger, true or false
+wait_for_start_trigger  = true;  % wait for start trigger, true or false
 gamma_correction_file   = 'gamma_correction_sony_projector.mat';
 
 % NI-DAQ info
