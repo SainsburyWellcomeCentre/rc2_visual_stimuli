@@ -85,7 +85,7 @@ for i = 1 : schedule.n_stim_per_session
     seq.add_period(dg);
 end
 
-
+n_stim_per_rep = schedule.n_stim_per_session / schedule.n_repetitions;
 
 try
     
@@ -108,22 +108,22 @@ try
         end
     end
     
-    for stim_i = 0 : schedule.n_stim_per_session + 1
+    for stim_i = 1 : schedule.n_stim_per_session + 1
         
         % white comes first
         % alternate the photodiode colour every stimulus.
-        pd.colour = mod(stim_i+1, 2);
+        pd.colour = mod(stim_i, 2);
         
-        if stim_i == 0
-            pd.buffer();
-            ptb.flip()
-            pause(baseline_duration)
-            continue
-        elseif stim_i == (schedule.n_stim_per_session+1)
+        if stim_i == (schedule.n_stim_per_session+1)
             pd.buffer();
             ptb.flip();
             pause(baseline_duration)
             break
+        end
+        
+        if mod(stim_i-1, n_stim_per_rep) == 0
+            ptb.flip()
+            pause(baseline_duration)
         end
         
         for frame_i = 1 : round(drift_duration/ptb.ifi)
