@@ -5,8 +5,8 @@ prot_fname = 'sparse_noise_warped_rc2_20200708.mat';
 % variables
 screen_number           = 2;        % s
 baseline_duration       = 4;        % s
-gamma_correction_file = 'gamma_correction_samsung_cfg73.mat';
 wait_for_start_trigger  = false;  % wait for start trigger, true or false
+gamma_correction_file = 'gamma_correction_sony_projector.mat';
 
 % NI-DAQ info
 nidaq_dev               = 'Dev1';
@@ -15,7 +15,7 @@ di_chan                 = 'port0/line0';
 
 % startup psychtoolbox
 ptb                     = PsychoToolbox();
-ptb.calibration_on      = false;
+ptb.calibration_on      = true;
 
 % warp info
 ptb.warp_on             = true;
