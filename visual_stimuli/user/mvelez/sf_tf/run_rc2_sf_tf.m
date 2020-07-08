@@ -112,7 +112,7 @@ try
         
         % white comes first
         % alternate the photodiode colour every stimulus.
-        pd.colour = mod(stim_i, 2);
+        pd.colour = mod(stim_i+1, 2);
         
         if stim_i == (schedule.n_stim_per_session+1)
             pd.buffer();
