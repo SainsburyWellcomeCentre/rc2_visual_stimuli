@@ -2,15 +2,15 @@ clear all
 
 %% options
 % where to save to
-save_fname = 'sparse_noise_warped_rc2_20200302.mat';
+save_fname = 'sparse_noise_warped_rc2_20200708.mat';
 
 % number of stimuli
-n_stimuli = 5000;
+n_stimuli = 2500;
 
 square_size = 5; % deg
 
 % width of the screen in mm
-w = 280;
+w = 300;
 % height of the screen in mm
 h = 180;
 % distance of eye from the screen

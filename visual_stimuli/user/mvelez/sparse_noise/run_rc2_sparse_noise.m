@@ -1,6 +1,6 @@
 
 % file where protocol is saved
-prot_fname = 'sparse_noise_warped_rc2_20200302.mat';
+prot_fname = 'sparse_noise_warped_rc2_20200708.mat';
 
 % variables
 screen_number           = 2;        % s
@@ -19,7 +19,7 @@ ptb.calibration_on      = false;
 
 % warp info
 ptb.warp_on             = true;
-ptb.warp_file           = 'warp_sony_projector.mat';
+ptb.warp_file           = 'warp_sony_projector_300x180.mat';
 
 % load a gamma table for gamma correction
 load(gamma_correction_file, 'gamma_table');

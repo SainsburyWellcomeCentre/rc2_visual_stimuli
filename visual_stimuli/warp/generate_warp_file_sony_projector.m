@@ -7,10 +7,10 @@
 
 % filename to save warp parameters as
 % we also pass this resulting mat file to psychtoolbox
-fname = 'warp_sony_projector.mat';
+fname = 'warp_sony_projector_300x180.mat';
 
 % width of the screen in mm
-w = 280;
+w = 300;
 % height of the screen in mm
 h = 180;
 % distance of eye from the centre of the screen
