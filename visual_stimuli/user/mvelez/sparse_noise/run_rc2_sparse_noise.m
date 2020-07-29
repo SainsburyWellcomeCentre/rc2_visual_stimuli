@@ -11,7 +11,9 @@ wait_for_start_trigger  = true;  % wait for start trigger, true or false
 % NI-DAQ info
 nidaq_dev               = 'Dev1';
 di_chan                 = 'port0/line0';
-
+ao_chan                 = 'ao0';
+ao_volt_white           = 5;
+ao_volt_black           = 0;
 
 % startup psychtoolbox
 ptb                     = PsychoToolbox();
@@ -38,6 +40,12 @@ if wait_for_start_trigger
         error('Digital input should start high')
     end
 end
+
+% add analog ouput to approximate photodiode
+ao = daq.createSession('ni');
+ao.addAnalogOutputChannel(nidaq_dev, ao_chan, 'Voltage');
+ao_volt_grey = (ao_volt_white + ao_volt_black)/2;
+
 
 %% 
 % load protocol
@@ -66,6 +74,9 @@ try
     bck.buffer();
     ptb.flip();
     
+    % set analog output to grey value
+    ao.outputSingleScan(ao_volt_grey);
+    
     % Wait for trigger to go low.
     if wait_for_start_trigger
         while inputSingleScan(di)
@@ -84,11 +95,15 @@ try
         if stim_i == 0
             pd.buffer();
             ptb.flip()
+            % set analog output to grey value
+            ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
             continue
         elseif stim_i == (n_stimuli+1)
             pd.buffer();
             ptb.flip();
+            % set analog output to grey value
+            ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
             break
         end
@@ -105,6 +120,13 @@ try
         
         % Update the screen.
         ptb.flip();
+        
+        % switch analog output each stimulus between high and low    
+        if mod(stim_i + 1, 2) == 0
+            ao.outputSingleScan(ao_volt_black)
+        else
+            ao.outputSingleScan(ao_volt_white)
+        end
         
         % wait ~0.25s
         pause(0.25);

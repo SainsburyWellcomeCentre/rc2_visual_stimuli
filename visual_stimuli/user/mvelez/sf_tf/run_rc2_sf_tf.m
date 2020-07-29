@@ -21,7 +21,9 @@ gamma_correction_file   = 'gamma_correction_sony_projector.mat';
 % NI-DAQ info
 nidaq_dev               = 'Dev1';
 di_chan                 = 'port0/line0';
-
+ao_chan                 = 'ao0';
+ao_volt_white           = 5;
+ao_volt_black           = 0;
 
 % startup psychtoolbox
 ptb                     = PsychoToolbox();
@@ -51,6 +53,12 @@ if wait_for_start_trigger
         error('Digital input should start high')
     end
 end
+
+% add analog ouput to approximate photodiode
+ao = daq.createSession('ni');
+ao.addAnalogOutputChannel(nidaq_dev, ao_chan, 'Voltage');
+ao_volt_grey = (ao_volt_white + ao_volt_black)/2;
+
 
 %% 
 % load protocol
@@ -99,6 +107,9 @@ try
     bck.buffer();
     ptb.flip();
     
+    % set analog output to grey value
+    ao.outputSingleScan(ao_volt_grey);
+    
     % Wait for trigger to go low.
     if wait_for_start_trigger
         while inputSingleScan(di)
@@ -110,19 +121,23 @@ try
     
     for stim_i = 1 : schedule.n_stim_per_session + 1
         
-        % white comes first
+        % black comes first
         % alternate the photodiode colour every stimulus.
         pd.colour = mod(stim_i+1, 2);
         
         if stim_i == (schedule.n_stim_per_session+1)
             pd.buffer();
             ptb.flip();
+            % set analog output to grey value
+            ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
             break
         end
         
         if mod(stim_i-1, n_stim_per_rep) == 0
             ptb.flip()
+            % set analog output to grey value
+            ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
         end
         
@@ -135,6 +150,16 @@ try
             
             % Update the screen.
             ptb.flip();
+            
+            % switch analog output each stimulus between high and low
+            % on first frame of stimulus to match photodiode
+            if frame_i == 1
+                if mod(stim_i + 1, 2) == 0
+                    ao.outputSingleScan(ao_volt_black)
+                else
+                    ao.outputSingleScan(ao_volt_white)
+                end
+            end
             
             % check for key-press from the user.
             if test_on
