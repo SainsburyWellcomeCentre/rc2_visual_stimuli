@@ -1,29 +1,39 @@
+clear all;
+
 % for testing spatial frequencies
 test_on = false;
 
 % file where protocol is saved
-prot_fname = 'sf_tf_rc2_20200727.mat';
+prot_fname = 'opticflow_rc2_20201214.mat';
 
 if test_on
-    prot_fname = 'sf_tf_rc2_test.mat';
+    %prot_fname = 'sf_tf_rc2_test.mat';
     is_waiting = true;
 end
 
 % variables
-screen_number           = 1;        % s
+%% TODO need to save these data in a file somewhere, especially screen_position.
+
+% Change the screen_position variable and unplug the other monitor, don't
+% change screen_number.
+screen_position         = 'right'; % 'left' or 'right';
+screen_number           = 2;        % s
 baseline_duration       = 10;        % s
-drift_duration          = 4;      % s
-distance_from_screen    = 50;       % mm
-screen_name             = 'sony_projector';
+drift_duration          = 2.5;      % s
+isi_duration            = 2.5;      % s
+distance_from_screen    = 100;       % mm
+screen_name             = 'samsung_cfg73'; %'sony_projector';
 wait_for_start_trigger  = false;  % wait for start trigger, true or false
 gamma_correction_file   = 'gamma_correction_sony_projector.mat';
 
 % NI-DAQ info
-nidaq_dev               = 'Dev1';
+nidaq_dev               = 'Dev2';
 di_chan                 = 'port0/line0';
 
 
 % startup psychtoolbox
+sca;
+clear ptb;
 ptb                     = PsychoToolbox();
 ptb.calibration_on      = false;
 
@@ -44,62 +54,48 @@ if wait_for_start_trigger
     
     di = daq.createSession('ni');
     di.addDigitalChannel(nidaq_dev, di_chan, 'InputOnly');
+
+    di_state = inputSingleScan(di);
     
     % check that trigger is high to start
     di_state = inputSingleScan(di);
-    if ~di_state
-        error('Digital input should start high')
+    if di_state
+        error('Digital input should start low.')
     end
+
 end
 
 %% 
 % load protocol
 load(prot_fname, 'schedule');
-%% Setup laser for optogenetic stimulation %added 200725 by SW
-%Laser output, wired to NI USB6002 at the anolog output AOo
-laser_on=1;
-% d=daq.createSession('ni');
-% d.addAnalogOutputChannel('Dev1', 'ao0', 'Voltage');
-% d.Rate=1000;
-% d.IsContinuous=false;
-%reset to 0
-% outputSingleScan(d,[0]);
-%Voltage amplitude (use 0 to 5, 5 is max); calibrate irradiance!
-v_amp=3;
-%define start and duration of laser stimulus (depending on frames of visual stimulation)
-start_frame=60; %given 60 Hz fram rate;
-dur=2*start_frame;%given 60 Hz fram rate;
-%sessions
-m_stimuli=zeros(schedule.n_directions,schedule.n_repetitions);
-%zero every nth session
-n_sess=2;
-m_stimuli(:,n_sess:n_sess:end)=m_stimuli(:,n_sess:n_sess:end)+1;
-laser_on_sess=m_stimuli(:);
+
 %% 
 % create an object controlling the background
-bck                 = Background(ptb);
+bck                 = Background(setup);
 bck.colour          = ptb.mid_grey_index(screen_number);
 
 % create object controlling photodiode box
-pd                  = Photodiode(ptb);
-pd.location         = 'top_right';
+pd                  = Photodiode(setup);
+if strcmp(screen_position, 'left')
+    pd.location         = 'top_left';
+else
+    pd.location         = 'top_right';
+end
 
 % create object controlling binocular black spot
-b_blank             =Blank_bino(ptb);
-b_blank.location         = 'top_left';
+b_blank             = Blank_bino(setup);
+if strcmp(screen_position, 'left')
+    b_blank.location    = 'top_right';
+else
+    b_blank.location    = 'top_left';
+end
 
 % Create an object controlling the sequence of stimuli to present.
 seq                 = Sequence();
 
 for i = 1 : schedule.n_stim_per_session
-%     
-%     g                   = Grating(ptb, setup);
-%     g.waveform          = schedule.waveform;
-%     g.cycles_per_degree = schedule.spatial_frequencies(i, session_n);
-%     g.orientation       = schedule.directions(i, session_n);
-%     g.phase             = schedule.start_phase(i, session_n);
     
-    dg                   = DriftingGrating(ptb, setup);
+    dg                   = DriftingGrating(setup);
     dg.waveform          = schedule.waveform;
     dg.cycles_per_degree = schedule.spatial_frequencies(i, 1);
     dg.cycles_per_second = schedule.temporal_frequencies(i, 1);
@@ -121,7 +117,7 @@ try
     
     % Present a grey screen.
     bck.buffer();
-    ptb.flip();
+    ptb.flip(screen_number);
     
     % Wait for trigger to go low.
     if wait_for_start_trigger
@@ -141,14 +137,14 @@ try
         if stim_i == (schedule.n_stim_per_session+1)
             pd.buffer();
             b_blank.buffer();
-            ptb.flip();
+            ptb.flip(screen_number);
             
             pause(baseline_duration)
             break
         end
         
         if mod(stim_i-1, n_stim_per_rep) == 0
-            ptb.flip()
+            ptb.flip(screen_number)
             pause(baseline_duration)
         end
         
@@ -163,39 +159,9 @@ try
             b_blank.buffer();
             
             % Update the screen.
-            ptb.flip();
+            ptb.flip(screen_number);
            
-           %startlaser stim session
-           %turn on laser
-           if laser_on==1;
-           if laser_on_sess(stim_i)==1;
-           if frame_i>start_frame & frame_i<(start_frame+dur);
-%             outputSingleScan(d,[v_amp]);
-           else
-           %turn off laser
-%            outputSingleScan(d,[0]);
-           end
-           else
-             if frame_i>start_frame & frame_i<(start_frame+dur);
-%             outputSingleScan(d,[-2]);
-             else
-%            outputSingleScan(d,[0]);
-             end
-           end
-          
-           else laser_on==0;
-               if laser_on_sess(stim_i)==1;
-           if frame_i>start_frame & frame_i<(start_frame+dur);
-%             outputSingleScan(d,[-2]);
-           else
-           %turn off laser
-%            outputSingleScan(d,[-2]);
-           end
-           else
-%            outputSingleScan(d,[-2]);
-           end
-           end
-           %end of laser stim call  
+           
              
             % check for key-press from the user.
             if test_on
@@ -215,6 +181,12 @@ try
             % wait on next iteration
             is_waiting = true;
         end
+        
+        pd.buffer();
+        b_blank.buffer();
+        ptb.flip(screen_number);
+
+        pause(isi_duration)
     end
     
     ptb.stop();
@@ -223,4 +195,3 @@ catch ME
     ptb.stop();
     rethrow(ME);
 end
-toc

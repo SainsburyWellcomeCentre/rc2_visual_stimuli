@@ -1,7 +1,6 @@
 classdef Grating < handle
     
     properties (SetAccess = private)
-        ptb
         setup
     end
     
@@ -26,9 +25,7 @@ classdef Grating < handle
     
     methods
         
-        function obj = Grating(ptb, setup)
-            
-            obj.ptb = ptb;
+        function obj = Grating(setup)
             obj.setup = setup;
             obj.dst_rect = CenterRect([0, 0, obj.setup.diagonal, obj.setup.diagonal], [0, 0, obj.setup.screen_pixels]);
         end
@@ -43,7 +40,7 @@ classdef Grating < handle
             if strcmp(obj.waveform, 'square')
                 grating = round(grating);
             end
-            obj.grating_texture = Screen('MakeTexture', obj.ptb.window, grating);
+            obj.grating_texture = Screen('MakeTexture', obj.setup.window, grating);
         end
         
         
@@ -56,7 +53,7 @@ classdef Grating < handle
         
         
         function buffer(obj)
-            Screen('DrawTexture', obj.ptb.window, obj.grating_texture, obj.src_rect, obj.dst_rect, obj.orientation);
+            Screen('DrawTexture', obj.setup.window, obj.grating_texture, obj.src_rect, obj.dst_rect, obj.orientation);
         end
         
         

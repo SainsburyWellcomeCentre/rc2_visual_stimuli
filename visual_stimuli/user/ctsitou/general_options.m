@@ -12,7 +12,7 @@ op.git_dir              = fullfile(fileparts(fileparts(mfilename('fullpath'))), 
 
 %% SAVING
 % where to save information for each session (i.e. animal_id\date directory)
-op.save_dir             = 'C:\data\ctsitou\BY_317_2_hemisphere_left_monitor_left'; % this will save in e.g. 'C:\data\CX_00_0\19700101'
+op.save_dir             = 'D:\Data\visual_stimuli'; % this will save in e.g. 'C:\data\CX_00_0\19700101'
 
 % whether to save information at all
 op.save_enabled         = true;
@@ -24,7 +24,7 @@ op.screen_number        = 1;
 
 % state whether to apply gamma correction and set path to a .mat file with
 % a gamma table to apply
-op.calibration_on       = true;
+op.calibration_on       = False;
 op.calibration_file     = 'C:\Users\Analysis-NN7570699\Documents\MATLAB\margrielab\visual_stimuli\gamma\gamma_correction.mat';
 
 % whether to apply warp and mat file for warping parameters

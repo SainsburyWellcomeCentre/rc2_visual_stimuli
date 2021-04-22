@@ -6,12 +6,14 @@ classdef SetupInfo < handle
     
     properties
         screen_number
+        screen_index
         distance_from_screen = 200
         screen_name
     end
     
     properties (Dependent = true)
         screen_size
+        window
     end
     
     properties (SetAccess = private, Hidden = true)
@@ -30,11 +32,16 @@ classdef SetupInfo < handle
             obj.screen_name = screen_name;
             VariableDefault('screen_number', max(obj.ptb.screens))
             obj.set_screen_number(screen_number);
+            obj.screen_index = screen_number == obj.ptb.screens;
         end
         
         
         function val = get.screen_size(obj)
             val = screen_sizes(obj.screen_name);
+        end
+        
+        function val = get.window(obj)
+            val = obj.ptb.window(obj.screen_index);
         end
         
         

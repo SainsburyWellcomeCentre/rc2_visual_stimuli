@@ -2,7 +2,7 @@
 test_on = false;
 
 % file where protocol is saved
-prot_fname = 'sf_tf_rc2_20200727.mat';
+prot_fname = 'sf_tf_rc2_20200805.mat';
 
 if test_on
     prot_fname = 'sf_tf_rc2_test.mat';
@@ -10,12 +10,12 @@ if test_on
 end
 
 % variables
-screen_number           = 1;        % s
+screen_number           = 2;        % s
 baseline_duration       = 10;        % s
 drift_duration          = 4;      % s
 distance_from_screen    = 50;       % mm
 screen_name             = 'sony_projector';
-wait_for_start_trigger  = false;  % wait for start trigger, true or false
+wait_for_start_trigger  = true;  % wait for start trigger, true or false
 gamma_correction_file   = 'gamma_correction_sony_projector.mat';
 
 % NI-DAQ info
@@ -25,7 +25,7 @@ di_chan                 = 'port0/line0';
 
 % startup psychtoolbox
 ptb                     = PsychoToolbox();
-ptb.calibration_on      = false;
+ptb.calibration_on      = true;
 
 % warp info
 ptb.warp_on             = false;
@@ -58,12 +58,12 @@ load(prot_fname, 'schedule');
 %% Setup laser for optogenetic stimulation %added 200725 by SW
 %Laser output, wired to NI USB6002 at the anolog output AOo
 laser_on=1;
-% d=daq.createSession('ni');
-% d.addAnalogOutputChannel('Dev1', 'ao0', 'Voltage');
-% d.Rate=1000;
-% d.IsContinuous=false;
+d=daq.createSession('ni');
+d.addAnalogOutputChannel('Dev1', 'ao0', 'Voltage');
+d.Rate=1000;
+d.IsContinuous=false;
 %reset to 0
-% outputSingleScan(d,[0]);
+outputSingleScan(d,[0]);
 %Voltage amplitude (use 0 to 5, 5 is max); calibrate irradiance!
 v_amp=3;
 %define start and duration of laser stimulus (depending on frames of visual stimulation)
@@ -170,29 +170,29 @@ try
            if laser_on==1;
            if laser_on_sess(stim_i)==1;
            if frame_i>start_frame & frame_i<(start_frame+dur);
-%             outputSingleScan(d,[v_amp]);
+            outputSingleScan(d,[v_amp]);
            else
            %turn off laser
-%            outputSingleScan(d,[0]);
+           outputSingleScan(d,[0]);
            end
            else
              if frame_i>start_frame & frame_i<(start_frame+dur);
-%             outputSingleScan(d,[-2]);
+            outputSingleScan(d,[-2]);
              else
-%            outputSingleScan(d,[0]);
+           outputSingleScan(d,[0]);
              end
            end
           
            else laser_on==0;
                if laser_on_sess(stim_i)==1;
            if frame_i>start_frame & frame_i<(start_frame+dur);
-%             outputSingleScan(d,[-2]);
+            outputSingleScan(d,[-2]);
            else
            %turn off laser
-%            outputSingleScan(d,[-2]);
+           outputSingleScan(d,[-2]);
            end
            else
-%            outputSingleScan(d,[-2]);
+           outputSingleScan(d,[-2]);
            end
            end
            %end of laser stim call  

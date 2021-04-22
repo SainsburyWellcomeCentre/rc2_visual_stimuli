@@ -1,20 +1,21 @@
 classdef Blank_bino < handle
     
     properties (SetAccess = private)
-        ptb
+        setup
         position
     end
     
     properties
         location = 'top_left'
         colour = 0;
-        warp_style = 'Oval'
+        warp_style = 'Oval';
+        size = 500;
     end
     
     methods
         
-        function obj = Blank_bino(ptb)
-            obj.ptb = ptb;
+        function obj = Blank_bino(setup)
+            obj.setup = setup;
         end
         
         
@@ -22,11 +23,14 @@ classdef Blank_bino < handle
         function val = get.position(obj)
             switch obj.location
                 case 'top_left'
-                    if obj.ptb.warp_on
+                    if obj.setup.ptb.warp_on
                         % the PD 
                         val = [70, 150, 170, 250];
                     else
-                        val = [0, 0, 200, 1280];
+                        leftPos = 0;
+                        topPos = 0;
+                        botPos = obj.setup.screen_pixels(2);
+                        val = [leftPos, topPos, leftPos + obj.size, botPos];
                     end
 %                 case 'bottom_left'
 %                     val = [0, 950, 100, 1050];
@@ -35,29 +39,34 @@ classdef Blank_bino < handle
 %                 case 'top_right'
 %                     val = [1580, 0, 1680, 100];
                 case 'top_right'
-                    if obj.ptb.warp_on
+                    if obj.setup.ptb.warp_on
                         val = [1016, 320;
                                921, 248;
                                1023, 340;
                                1110, 403;
                                1016, 320];
                     else
-                        val = [980, 0, 1280, 1280];
+
+                        leftPos = obj.setup.screen_pixels(1) - obj.size;
+                        topPos = 0;
+                        botPos = obj.setup.screen_pixels(2);
+                        val = [leftPos, topPos, leftPos + obj.size, botPos];
+                
                     end
             end
         end
         
-        
+  
         
         function buffer(obj)
-            if obj.ptb.warp_on
+            if obj.setup.ptb.warp_on
                 if strcmp(obj.warp_style, 'Oval')
-                    Screen('FillOval', obj.ptb.window, obj.colour, obj.position);
+                    Screen('FillOval', obj.setup.window, obj.colour, obj.position);
                 elseif strcmp(obj.warp_style, 'Polygon')
-                    Screen('FillPoly', obj.ptb.window, obj.colour, obj.position);
+                    Screen('FillPoly', obj.setup.window, obj.colour, obj.position);
                 end
             else
-                Screen('FillRect', obj.ptb.window, obj.colour, obj.position);
+                Screen('FillRect', obj.setup.window, obj.colour, obj.position);
             end
         end
     end

@@ -30,8 +30,18 @@ classdef PsychoToolbox < handle
         function obj = PsychoToolbox()
             PsychDefaultSetup(2);
             obj.screens = Screen('Screens');
-            [obj.screen_pixels, obj.white, obj.black, obj.mid_grey] = ...
-                obj.get_screen_info();
+            [sz, w_, b_, grey] = obj.get_screen_info();
+            
+            obj.screen_pixels = sz;
+            obj.white = w_;
+            obj.black = b_;
+            obj.mid_grey = grey;
+            
+            obj.window = nan(1, length(obj.screens));
+            obj.window_rect = nan(length(obj.screens), 4);
+            obj.ifi = nan(1, length(obj.screens));
+            obj.priority = nan(1, length(obj.screens));
+           
         end
         
         
@@ -67,25 +77,33 @@ classdef PsychoToolbox < handle
         end
         
         function start(obj, screen_number)
-            sca;
-            HideCursor;
+            % Can't clear screens here if there are multiple screens.
+            %sca;
+            % Turn off hide cursor for now because it's annoying during
+            % development.
+            %HideCursor;
+            
+            idx = screen_number == obj.screens;
             
             if obj.warp_on && ~isempty(obj.warp_file)
                 PsychImaging('PrepareConfiguration');
                 PsychImaging('AddTask', 'AllViews', 'GeometryCorrection', obj.warp_file);
             end
             
-            [obj.window, obj.window_rect] = PsychImaging('OpenWindow', screen_number, 0.001);
+            %[obj.window, obj.window_rect] = PsychImaging('OpenWindow', screen_number, 0.001);
+            [win, win_rec] = PsychImaging('OpenWindow', screen_number, 0.001);
+            obj.window(idx) = win;
+            obj.window_rect(idx, :) = win_rec;
             
             if obj.calibration_on
-                obj.original_gamma = Screen('LoadNormalizedGammaTable', obj.window, obj.gamma_table, 0);
+                obj.original_gamma(idx) = Screen('LoadNormalizedGammaTable', obj.window(idx), obj.gamma_table(idx), 0);
             end
             
-            Screen('BlendFunction', obj.window, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            obj.ifi = Screen('GetFlipInterval', obj.window);
-            obj.priority = MaxPriority(obj.window);
-            Priority(obj.priority);
-            Screen('Flip', obj.window);
+            Screen('BlendFunction', obj.window(idx), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            obj.ifi = Screen('GetFlipInterval', obj.window(idx));
+            obj.priority(idx) = MaxPriority(obj.window(idx));
+            Priority(obj.priority(idx));
+            Screen('Flip', obj.window(idx));
         end
         
         
@@ -99,8 +117,13 @@ classdef PsychoToolbox < handle
         end
         
         
-        function flip(obj)
-            Screen('Flip', obj.window);
+        function flip(obj, screen_number)
+            
+            
+            idx = screen_number == obj.screens;
+            
+            Screen('Flip', obj.window(idx));
+
         end
     end
 end

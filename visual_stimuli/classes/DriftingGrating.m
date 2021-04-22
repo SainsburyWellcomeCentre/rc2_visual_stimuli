@@ -14,9 +14,9 @@ classdef DriftingGrating < Grating
     
     methods
         
-        function obj = DriftingGrating(ptb, setup)
+        function obj = DriftingGrating(setup)
             
-            obj = obj@Grating(ptb, setup);
+            obj = obj@Grating(setup);
         end
         
         
@@ -24,7 +24,7 @@ classdef DriftingGrating < Grating
             
             obj.n = 0;
             obj.start_phase = obj.phase;
-            obj.shift_per_frame = 2*pi * obj.ptb.ifi * obj.cycles_per_second;
+            obj.shift_per_frame = 2*pi * obj.setup.ptb.ifi * obj.cycles_per_second;
             
             initialize@Grating(obj);
         end
