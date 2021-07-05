@@ -65,12 +65,12 @@ ao_volt_grey = (ao_volt_white + ao_volt_black)/2;
 load(prot_fname, 'schedule');
 
 % create an object controlling the background
-bck                 = Background(ptb);
+bck                 = Background(setup);
 bck.colour          = ptb.mid_grey_index(screen_number);
 
 % create object controlling photodiode box
-pd                  = Photodiode(ptb);
-pd.location         = 'top_right';
+pd                  = Photodiode(setup);
+pd.location         = 'top_left';
 
 % Create an object controlling the sequence of stimuli to present.
 seq                 = Sequence();
@@ -83,7 +83,7 @@ for i = 1 : schedule.n_stim_per_session
 %     g.orientation       = schedule.directions(i, session_n);
 %     g.phase             = schedule.start_phase(i, session_n);
     
-    dg                   = DriftingGrating(ptb, setup);
+    dg                   = DriftingGrating(setup);
     dg.waveform          = schedule.waveform;
     dg.cycles_per_degree = schedule.spatial_frequencies(i, 1);
     dg.cycles_per_second = schedule.temporal_frequencies(i, 1);
@@ -105,7 +105,7 @@ try
     
     % Present a grey screen.
     bck.buffer();
-    ptb.flip();
+    ptb.flip(screen_number);
     
     % set analog output to grey value
     ao.outputSingleScan(ao_volt_grey);
@@ -127,7 +127,7 @@ try
         
         if stim_i == (schedule.n_stim_per_session+1)
             pd.buffer();
-            ptb.flip();
+            ptb.flip(screen_number);
             % set analog output to grey value
             ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
@@ -135,7 +135,7 @@ try
         end
         
         if mod(stim_i-1, n_stim_per_rep) == 0
-            ptb.flip()
+            ptb.flip(screen_number)
             % set analog output to grey value
             ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
@@ -149,7 +149,7 @@ try
             pd.buffer();
             
             % Update the screen.
-            ptb.flip();
+            ptb.flip(screen_number);
             
             % switch analog output each stimulus between high and low
             % on first frame of stimulus to match photodiode
