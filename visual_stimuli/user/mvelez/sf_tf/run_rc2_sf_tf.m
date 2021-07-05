@@ -14,7 +14,7 @@ screen_number           = 2;        % s
 baseline_duration       = 10;        % s
 drift_duration          = 2.5;      % s
 distance_from_screen    = 50;       % mm
-screen_name             = 'sony_projector';
+screen_name             = 'newdream8_240hz';
 wait_for_start_trigger  = true;  % wait for start trigger, true or false
 gamma_correction_file   = 'gamma_correction_sony_projector.mat';
 
