@@ -9,7 +9,6 @@ classdef PsychoToolbox < handle
     end
     
     properties
-        original_gamma
         gamma_table
         calibration_on = false
         warp_on = false
@@ -21,6 +20,8 @@ classdef PsychoToolbox < handle
         white
         black
         mid_grey
+        original_gamma
+        active
     end
     
     
@@ -41,7 +42,8 @@ classdef PsychoToolbox < handle
             obj.window_rect = nan(length(obj.screens), 4);
             obj.ifi = nan(1, length(obj.screens));
             obj.priority = nan(1, length(obj.screens));
-           
+            obj.original_gamma = cell(1, length(obj.screens));
+            obj.active = false(1, length(obj.screens));
         end
         
         
@@ -96,7 +98,7 @@ classdef PsychoToolbox < handle
             obj.window_rect(idx, :) = win_rec;
             
             if obj.calibration_on
-                obj.original_gamma(idx) = Screen('LoadNormalizedGammaTable', obj.window(idx), obj.gamma_table(idx), 0);
+                obj.original_gamma{idx} = Screen('LoadNormalizedGammaTable', obj.window(idx), obj.gamma_table, 0);
             end
             
             Screen('BlendFunction', obj.window(idx), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -104,13 +106,21 @@ classdef PsychoToolbox < handle
             obj.priority(idx) = MaxPriority(obj.window(idx));
             Priority(obj.priority(idx));
             Screen('Flip', obj.window(idx));
+            obj.active(idx) = false;
         end
         
         
         function stop(obj)
-            if obj.calibration_on && ~isempty(obj.original_gamma)
-                Screen('LoadNormalizedGammaTable', obj.window, obj.original_gamma, 0);
+            
+            if obj.calibration_on
+                for i = 1 : length(obj.screens)
+                    if obj.active(i) && ~isempty(obj.original_gamma{i})
+                        Screen('LoadNormalizedGammaTable', obj.window(i), obj.original_gamma{i}, 0);
+                        obj.active(i) = false;
+                    end
+                end
             end
+            
             Screen('CloseAll');
             sca;
             ShowCursor;

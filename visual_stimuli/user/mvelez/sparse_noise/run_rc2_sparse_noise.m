@@ -1,11 +1,12 @@
+Screen('Preference', 'SkipSyncTests', 1);
 
 % file where protocol is saved
-prot_fname = 'sparse_noise_warped_rc2_20200708.mat';
+prot_fname = 'sparse_noise_warped_mp_300_20210827.mat';
 
 % variables
 screen_number           = 2;        % s
 baseline_duration       = 10;        % s
-gamma_correction_file = 'gamma_correction_sony_projector.mat';
+gamma_correction_file   = 'gamma_correction_mp_300.mat';
 wait_for_start_trigger  = true;  % wait for start trigger, true or false
 
 % NI-DAQ info
@@ -21,7 +22,7 @@ ptb.calibration_on      = true;
 
 % warp info
 ptb.warp_on             = true;
-ptb.warp_file           = 'warp_sony_projector_300x180.mat';
+ptb.warp_file           = 'warp_mp_300.mat';
 
 % load a gamma table for gamma correction
 load(gamma_correction_file, 'gamma_table');
@@ -138,9 +139,12 @@ try
     
     ptb.stop();
     
+    clear all
+    
 catch ME
     
     ptb.stop();
+    clearvars -except ME
     rethrow(ME);
 end
 

@@ -1,8 +1,11 @@
 clear all
 
 %% options
+% screen name
+screen_name = 'mp_300';
+
 % where to save to
-save_fname = 'sparse_noise_warped_rc2_20200708.mat';
+save_fname = 'sparse_noise_warped_mp_300_20210827.mat';
 
 % number of stimuli
 n_stimuli = 2500;
@@ -10,19 +13,19 @@ n_stimuli = 2500;
 square_size = 5; % deg
 
 % width of the screen in mm
-w = 300;
+w = 347;
 % height of the screen in mm
-h = 180;
+h = 195;
 % distance of eye from the screen
-d = 50;
+d = 80;
 
 % location on screen of closest point to eye
-centre_w = 50;
-centre_h = h-10;
+centre_w = 80;
+centre_h = h-25;
 
 % number of pixel width and height
-w_pix = 1280;
-h_pix = 720;
+w_pix = 960;
+h_pix = 540;
 
 
 
