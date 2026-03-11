@@ -9,7 +9,7 @@ classdef Blank_bino < handle
         location = 'top_left'
         colour = 0;
         warp_style = 'Oval';
-        size = 500;
+        size = 184.6154;
     end
     
     methods

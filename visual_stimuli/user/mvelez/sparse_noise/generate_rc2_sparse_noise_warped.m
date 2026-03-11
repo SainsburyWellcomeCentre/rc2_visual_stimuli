@@ -21,7 +21,7 @@ d = 80;
 
 % location on screen of closest point to eye
 centre_w = 80;
-centre_h = h-25;
+centre_h = 25;
 
 % number of pixel width and height
 w_pix = 960;

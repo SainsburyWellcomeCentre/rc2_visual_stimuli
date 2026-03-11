@@ -19,7 +19,7 @@ classdef Square < handle
         
         
         function buffer(obj)
-            Screen('FillRect', obj.ptb.window, obj.colour, obj.position);
+            Screen('FillRect', obj.setup.window, obj.colour, obj.position);
         end
     end
 end

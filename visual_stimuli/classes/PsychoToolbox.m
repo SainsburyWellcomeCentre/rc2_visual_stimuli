@@ -93,6 +93,9 @@ classdef PsychoToolbox < handle
             end
             
             %[obj.window, obj.window_rect] = PsychImaging('OpenWindow', screen_number, 0.001);
+            PsychImaging('PrepareConfiguration');
+            PsychImaging('AddTask', 'General', 'UseDisplayRotation', 180);
+            
             [win, win_rec] = PsychImaging('OpenWindow', screen_number, 0.001);
             obj.window(idx) = win;
             obj.window_rect(idx, :) = win_rec;

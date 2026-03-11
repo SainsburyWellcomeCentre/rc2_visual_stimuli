@@ -18,7 +18,7 @@ d = 80;
 
 % where mouse eye is opposite
 centre_w = 80;
-centre_h = h-25;
+centre_h = 25;
 
 % number of pixel width and height
 w_pix = 960;

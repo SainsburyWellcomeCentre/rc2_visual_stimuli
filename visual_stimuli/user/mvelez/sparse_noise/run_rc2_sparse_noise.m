@@ -4,10 +4,12 @@ Screen('Preference', 'SkipSyncTests', 1);
 prot_fname = 'sparse_noise_warped_mp_300_20210827.mat';
 
 % variables
-screen_number           = 2;        % s
-baseline_duration       = 10;        % s
+screen_number           = 2;
+baseline_duration       = 2;        % s
+distance_from_screen    = 80;       % mm
+screen_name             = 'mp_300';
 gamma_correction_file   = 'gamma_correction_mp_300.mat';
-wait_for_start_trigger  = true;  % wait for start trigger, true or false
+wait_for_start_trigger  = false;  % wait for start trigger, true or false
 
 % NI-DAQ info
 nidaq_dev               = 'Dev1';
@@ -18,7 +20,7 @@ ao_volt_black           = 0;
 
 % startup psychtoolbox
 ptb                     = PsychoToolbox();
-ptb.calibration_on      = true;
+ptb.calibration_on      = false;
 
 % warp info
 ptb.warp_on             = true;
@@ -28,6 +30,9 @@ ptb.warp_file           = 'warp_mp_300.mat';
 load(gamma_correction_file, 'gamma_table');
 ptb.gamma_table 	= gamma_table;
 
+
+setup                       = SetupInfo(ptb, screen_name, screen_number);
+setup.distance_from_screen  = distance_from_screen;
 
 %% setup DAQ
 if wait_for_start_trigger
@@ -54,16 +59,16 @@ load(prot_fname, 'n_stimuli', 'x_border', 'y_border', ...
     'cols', 'x_locations', 'y_locations');
 
 % create an object controlling the background
-bck                 = Background(ptb);
+bck                 = Background(setup);
 bck.colour          = ptb.mid_grey_index(screen_number);
 
 % create object controlling photodiode box
-pd                  = Photodiode(ptb);
+pd                  = Photodiode(setup);
 pd.location         = 'top_right';
 pd.warp_style       = 'Polygon';
 
 % create a square (or several)
-sq                  = Square(ptb, []);
+sq                  = Square(ptb, setup);
 
 
 try
@@ -73,7 +78,7 @@ try
     
     % Present a grey screen.
     bck.buffer();
-    ptb.flip();
+    ptb.flip(screen_number);
     
     % set analog output to grey value
     ao.outputSingleScan(ao_volt_grey);
@@ -95,14 +100,14 @@ try
         
         if stim_i == 0
             pd.buffer();
-            ptb.flip()
+            ptb.flip(screen_number)
             % set analog output to grey value
             ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
             continue
         elseif stim_i == (n_stimuli+1)
             pd.buffer();
-            ptb.flip();
+            ptb.flip(screen_number);
             % set analog output to grey value
             ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
@@ -120,7 +125,7 @@ try
         pd.buffer();
         
         % Update the screen.
-        ptb.flip();
+        ptb.flip(screen_number);
         
         % switch analog output each stimulus between high and low    
         if mod(stim_i + 1, 2) == 0

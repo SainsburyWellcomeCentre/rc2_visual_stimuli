@@ -10,7 +10,7 @@ if test_on
 end
 
 % variables
-screen_number           = 2;        % s
+screen_number           = 1;        % s
 baseline_duration       = 10;        % s
 drift_duration          = 2.5;      % s
 distance_from_screen    = 50;       % mm
@@ -27,7 +27,7 @@ ao_volt_black           = 0;
 
 % startup psychtoolbox
 ptb                     = PsychoToolbox();
-ptb.calibration_on      = true;
+ptb.calibration_on      = false;
 
 % warp info
 ptb.warp_on             = false;
@@ -46,7 +46,7 @@ if wait_for_start_trigger
     
     di = daq.createSession('ni');
     di.addDigitalChannel(nidaq_dev, di_chan, 'InputOnly');
-    
+  
     % check that trigger is high to start
     di_state = inputSingleScan(di);
     if ~di_state

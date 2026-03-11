@@ -10,7 +10,7 @@ classdef Photodiode < handle
         location = 'top_left'
         colour = 0;
         warp_style = 'Oval';
-        size = 200;
+        size = 200/1.33;
     end
     
     methods
@@ -40,11 +40,16 @@ classdef Photodiode < handle
 %                     val = [1580, 0, 1680, 100];
                 case 'top_right'
                     if obj.setup.ptb.warp_on
-                        val = [1016, 320;
-                               921, 248;
-                               1023, 340;
-                               1110, 403;
-                               1016, 320];
+%                         val = [1016, 320;
+%                                921, 248;
+%                                1023, 340;
+%                                1110, 403;
+%                                1016, 320];
+                         val = [938, 131;
+                                933, 76;
+                                954, 80;
+                                959, 129;
+                                938, 131];
                     else
                         leftPos = obj.setup.screen_pixels(1) - obj.size;
                         topPos = 0;
@@ -57,9 +62,9 @@ classdef Photodiode < handle
         
         function buffer(obj)
             if obj.setup.ptb.warp_on
-                if strcmp(obj.setup.warp_style, 'Oval')
+                if strcmp(obj.warp_style, 'Oval')
                     Screen('FillOval', obj.setup.window, obj.colour, obj.position);
-                elseif strcmp(obj.setup.warp_style, 'Polygon')
+                elseif strcmp(obj.warp_style, 'Polygon')
                     Screen('FillPoly', obj.setup.window, obj.colour, obj.position);
                 end
             else
