@@ -87,15 +87,18 @@ classdef PsychoToolbox < handle
             
             idx = screen_number == obj.screens;
             
+            % Single PrepareConfiguration call
+            PsychImaging('PrepareConfiguration');
+            
+            % Add warp/geometry correction if enabled
             if obj.warp_on && ~isempty(obj.warp_file)
-                PsychImaging('PrepareConfiguration');
                 PsychImaging('AddTask', 'AllViews', 'GeometryCorrection', obj.warp_file);
             end
             
-            %[obj.window, obj.window_rect] = PsychImaging('OpenWindow', screen_number, 0.001);
-            PsychImaging('PrepareConfiguration');
+            % Add display rotation
             PsychImaging('AddTask', 'General', 'UseDisplayRotation', 180);
             
+            % Now open the window
             [win, win_rec] = PsychImaging('OpenWindow', screen_number, 0.001);
             obj.window(idx) = win;
             obj.window_rect(idx, :) = win_rec;

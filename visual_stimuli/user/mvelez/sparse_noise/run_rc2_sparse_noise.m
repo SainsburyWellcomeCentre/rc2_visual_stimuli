@@ -4,7 +4,7 @@ Screen('Preference', 'SkipSyncTests', 1);
 prot_fname = 'sparse_noise_warped_mp_300_20210827.mat';
 
 % variables
-screen_number           = 2;
+screen_number           = 3;
 baseline_duration       = 2;        % s
 distance_from_screen    = 80;       % mm
 screen_name             = 'mp_300';
@@ -64,7 +64,7 @@ bck.colour          = ptb.mid_grey_index(screen_number);
 
 % create object controlling photodiode box
 pd                  = Photodiode(setup);
-pd.location         = 'top_right';
+pd.location         = 'bottom_left';
 pd.warp_style       = 'Polygon';
 
 % create a square (or several)
@@ -152,6 +152,3 @@ catch ME
     clearvars -except ME
     rethrow(ME);
 end
-
-
-

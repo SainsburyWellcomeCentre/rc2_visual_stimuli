@@ -19,7 +19,7 @@ classdef Background < handle
         
         
         function buffer(obj)
-            Screen('OpenWindow', obj.setup.window, obj.colour);
+            Screen('FillRect', obj.setup.window, obj.colour);
         end
         
         

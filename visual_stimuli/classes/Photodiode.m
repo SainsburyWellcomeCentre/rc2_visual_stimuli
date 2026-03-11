@@ -32,8 +32,20 @@ classdef Photodiode < handle
                         topPos = 0;
                         val = [leftPos, topPos, leftPos + obj.size, topPos + obj.size];
                     end
-%                 case 'bottom_left'
-%                     val = [0, 950, 100, 1050];
+                case 'bottom_left'
+                    if obj.setup.ptb.warp_on
+                        % Adjust these coordinates to position photodiode correctly
+                        % after warping. Start with pre-warp bottom-left area.
+                        leftPos = -80; 
+                        bottomPos = obj.setup.screen_pixels(2) - 25; % start at bottom
+                        sqSize = 100; % 100x100 pixel square
+                        val = [leftPos, bottomPos - sqSize, leftPos + sqSize, bottomPos];
+                    else
+                        leftPos = 0;
+                        bottomPos = obj.setup.screen_pixels(2);
+                        sqSize = 100;
+                        val = [leftPos, bottomPos - sqSize, leftPos + sqSize, bottomPos];
+                    end
 %                 case 'bottom_right'
 %                     val = [1580, 950, 1680, 1050];
 %                 case 'top_right'
@@ -61,15 +73,8 @@ classdef Photodiode < handle
         
         
         function buffer(obj)
-            if obj.setup.ptb.warp_on
-                if strcmp(obj.warp_style, 'Oval')
-                    Screen('FillOval', obj.setup.window, obj.colour, obj.position);
-                elseif strcmp(obj.warp_style, 'Polygon')
-                    Screen('FillPoly', obj.setup.window, obj.colour, obj.position);
-                end
-            else
-                Screen('FillRect', obj.setup.window, obj.colour, obj.position);
-            end
+            % Use FillRect for all cases to avoid warp transformation
+            Screen('FillRect', obj.setup.window, obj.colour, obj.position);
         end
     end
 end
