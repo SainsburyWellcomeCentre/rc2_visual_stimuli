@@ -1,7 +1,7 @@
 Screen('Preference', 'SkipSyncTests', 1);
 
 % file where protocol is saved
-prot_fname = 'sparse_noise_warped_mp_300_20210827.mat';
+prot_fname = 'sparse_noise_mp_300_test.mat';
 
 % variables
 screen_number           = 3;
@@ -9,7 +9,7 @@ baseline_duration       = 2;        % s
 distance_from_screen    = 80;       % mm
 screen_name             = 'mp_300';
 gamma_correction_file   = 'gamma_correction_mp_300.mat';
-wait_for_start_trigger  = false;  % wait for start trigger, true or false
+wait_for_start_trigger  = true;  % wait for start trigger, true or false
 
 % NI-DAQ info
 nidaq_dev               = 'Dev1';
@@ -24,7 +24,7 @@ ptb.calibration_on      = false;
 
 % warp info
 ptb.warp_on             = true;
-ptb.warp_file           = 'warp_mp_300.mat';
+ptb.warp_file           = 'warp_mp_300_test.mat';
 
 % load a gamma table for gamma correction
 load(gamma_correction_file, 'gamma_table');
