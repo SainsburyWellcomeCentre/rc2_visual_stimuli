@@ -1,21 +1,25 @@
 function varargout = screen_sizes(varargin)
 
-monitor_names = {'dell_u2415b', 'hp_pavilion', 'samsung_cfg73', 'philips_278e', 'sony_projector', 'newdream8_240hz', 'mp_300'};
-screen_sizes = {[518.4, 324.0], [344, 193], [521.4, 293.3], [597.18, 337], [300, 180], [344, 193], [347, 195.6]};
+monitor_names = {'mp_300', 'wisecoco'};
 
+% Physical screen dimensions [width, height] in mm
+screen_sizes = {[347, 195.6], [35.3, 35.3]};
 
 % This will usually be the default screen size in pixels. We can of course change
 % this in settings. If you want to do this, you can just create an extra
 % entry here, and name the monitor something else.
-screen_pixels = {[1920, 1200], [1366, 768], [1920, 1080], [1920, 1080], [1280, 720], [960, 540], [960, 540]};
+screen_pixels = {[960, 540], [400, 400]};
+
+% Distance from eye to screen in mm (for warp calculations)
+% Empty means no warp parameters available for this screen
+eye_distance = {150, 12};
+
+% Eye center position [centre_w, centre_h] in mm (for warp calculations)
+% Empty means screen center should be used
+eye_centre = {[150, 25], [35.3/2, 35.3/2]};
 
 
-
-if nargin == 1
-    idx = strcmp(varargin{1}, monitor_names);
-    varargout{1} = screen_sizes{idx};
-    varargout{2} = screen_pixels{idx};
-else
+if nargin == 0
     fprintf('Stored monitors:\n');
     for i = 1 : length(monitor_names)
         fprintf(' %i:  %s\n', i, monitor_names{i});
@@ -23,6 +27,37 @@ else
     return
 end
 
-if isempty(varargout{1})
-    error('unrecognized screen name: %s', varargin{1});
+if nargin == 1
+    idx = strcmp(varargin{1}, monitor_names);
+    
+    if ~any(idx)
+        error('unrecognized screen name: %s', varargin{1});
+    end
+    
+    % Return screen size (backward compatible)
+    varargout{1} = screen_sizes{idx};
+    
+    % Return screen pixels if requested (backward compatible)
+    if nargout >= 2
+        varargout{2} = screen_pixels{idx};
+    end
+    
+    % Return full config struct if requested (NEW)
+    if nargout >= 3
+        config.name = monitor_names{idx};
+        config.w = screen_sizes{idx}(1);
+        config.h = screen_sizes{idx}(2);
+        config.w_pix = screen_pixels{idx}(1);
+        config.h_pix = screen_pixels{idx}(2);
+        config.d = eye_distance{idx};
+        config.centre_w = [];
+        config.centre_h = [];
+        
+        if ~isempty(eye_centre{idx})
+            config.centre_w = eye_centre{idx}(1);
+            config.centre_h = eye_centre{idx}(2);
+        end
+        
+        varargout{3} = config;
+    end
 end
