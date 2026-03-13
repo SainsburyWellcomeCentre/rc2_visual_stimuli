@@ -6,7 +6,7 @@ prot_fname = 'sparse_noise_mp_300_test.mat';
 % variables
 screen_number           = 3;
 baseline_duration       = 2;        % s
-distance_from_screen    = 80;       % mm
+% distance_from_screen is now loaded automatically from setup config
 screen_name             = 'mp_300';
 gamma_correction_file   = 'gamma_correction_mp_300.mat';
 wait_for_start_trigger  = true;  % wait for start trigger, true or false
@@ -23,7 +23,7 @@ ptb                     = PsychoToolbox();
 ptb.calibration_on      = false;
 
 % warp info
-ptb.warp_on             = true;
+ptb.warp_on             = false;
 ptb.warp_file           = 'warp_mp_300_test.mat';
 
 % load a gamma table for gamma correction
@@ -31,8 +31,8 @@ load(gamma_correction_file, 'gamma_table');
 ptb.gamma_table 	= gamma_table;
 
 
+% SetupInfo now automatically loads distance_from_screen from config
 setup                       = SetupInfo(ptb, screen_name, screen_number);
-setup.distance_from_screen  = distance_from_screen;
 
 %% setup DAQ
 if wait_for_start_trigger

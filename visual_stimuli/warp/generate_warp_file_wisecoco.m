@@ -9,15 +9,13 @@
 % we also pass this resulting mat file to psychtoolbox
 fname = 'warp_wisecoco.mat';
 
-% Get screen configuration from centralized screen_sizes function
-[~, ~, config] = screen_sizes('wisecoco');
+% Get setup configuration (verbose output shows screen details)
+config = get_setup_config('wisecoco', true);
 
 %% calculations
 
-% Calculate warp parameters using shared function
-[~, ~, scal] = calculate_screen_warp(config.w, config.h, config.d, ...
-                                      config.centre_w, config.centre_h, ...
-                                      config.w_pix, config.h_pix);
+% Generate PsychoToolbox warp structure
+scal = calculate_screen_warp(config);
 
 % warptype required for psychtoolbox
 warptype = 'CSVDisplayList';

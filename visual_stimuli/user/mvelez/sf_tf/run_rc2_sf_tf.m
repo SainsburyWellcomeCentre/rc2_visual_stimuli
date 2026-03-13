@@ -13,7 +13,7 @@ end
 screen_number           = 1;        % s
 baseline_duration       = 10;        % s
 drift_duration          = 2.5;      % s
-distance_from_screen    = 50;       % mm
+% distance_from_screen is now loaded automatically from setup config
 screen_name             = 'newdream8_240hz';
 wait_for_start_trigger  = true;  % wait for start trigger, true or false
 gamma_correction_file   = 'gamma_correction_sony_projector.mat';
@@ -36,9 +36,8 @@ ptb.warp_on             = false;
 load(gamma_correction_file, 'gamma_table');
 ptb.gamma_table 	= gamma_table;
 
-% Information about the setup.
+% SetupInfo now automatically loads distance_from_screen from config
 setup                       = SetupInfo(ptb, screen_name, screen_number);
-setup.distance_from_screen  = distance_from_screen;
 
 
 %% setup DAQ

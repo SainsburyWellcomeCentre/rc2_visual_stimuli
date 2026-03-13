@@ -1,6 +1,5 @@
 %% Generate a sparse noise stimulus
-% a sequence of images where each image shows a gray screen with white and
-% black squares. 
+% a sequence of images where each image 
 
 clear all
 
@@ -16,14 +15,17 @@ n_stimuli = 5000;
 
 square_size = 5; % deg
 
-% Get setup configuration (verbose output shows screen details)
-config = get_setup_config(screen_name, true);
+% Get screen configuration from centralized screen_sizes function
+[~, ~, config] = screen_sizes(screen_name);
 
 %% calculations
 
-% Calculate the visual angles covered by the screen from the eye position
-% This is pure geometry - no warp correction is applied
-[x_angle_reg, y_angle_reg] = calculate_viewing_angles(config);
+% calculate screen warp is invoked to learn about the range of visual
+% angles covered by the screen, not to apply any warp correction
+% Calculate warp parameters using shared function
+[x_angle_reg, y_angle_reg] = calculate_screen_warp(config.w, config.h, config.d, ...
+                                                     config.centre_w, config.centre_h, ...
+                                                     config.w_pix, config.h_pix);
 
                                                  
 % now the screen is divided into a grid of squares
