@@ -6,10 +6,10 @@ clear all
 
 %% options
 % screen name
-screen_name = 'mp_300';
+screen_name = 'wisecoco';
 
 % where to save to
-save_fname = 'sparse_noise_mp_300_test.mat';
+save_fname = 'sparse_noise_wisecoco.mat';
 
 % number of stimuli
 n_stimuli = 5000;

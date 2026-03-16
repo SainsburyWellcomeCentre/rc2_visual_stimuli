@@ -1,0 +1,24 @@
+{
+  "name": "wisecoco",
+  "description": "Wisecoco OLED goggles for binocular mouse stimulation",
+  "screen": {
+    "width_mm": 35.3,
+    "height_mm": 35.3,
+    "width_px": 400,
+    "height_px": 400
+  },
+  "viewing_geometry": {
+    "eye_distance_mm": 12.0,
+    "eye_position_mm": {
+      "horizontal": 17.65,
+      "vertical": 17.65
+    }
+  },
+  "stereo": {
+    "enabled": true,
+    "mode": 4,
+    "full_display_px": [800, 400],
+    "per_eye_px": [400, 400]
+  },
+  "notes": "Close-range binocular goggle setup"
+}

@@ -1,0 +1,18 @@
+{
+  "name": "template",
+  "description": "Template for creating new experimental setup configurations",
+  "screen": {
+    "width_mm": 0.0,
+    "height_mm": 0.0,
+    "width_px": 0,
+    "height_px": 0
+  },
+  "viewing_geometry": {
+    "eye_distance_mm": 0.0,
+    "eye_position_mm": {
+      "horizontal": 0.0,
+      "vertical": 0.0
+    }
+  },
+  "notes": "Add any relevant notes about this setup here"
+}

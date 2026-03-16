@@ -4,7 +4,7 @@ Screen('Preference', 'SkipSyncTests', 1);
 prot_fname = 'sparse_noise_mp_300_test.mat';
 
 % variables
-screen_number           = 3;
+screen_number           = 2;
 baseline_duration       = 2;        % s
 % distance_from_screen is now loaded automatically from setup config
 screen_name             = 'mp_300';

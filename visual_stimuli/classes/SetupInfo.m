@@ -67,7 +67,18 @@ classdef SetupInfo < handle
         end
         
         function val = get.window(obj)
-            val = obj.ptb.window(obj.screen_index);
+            % GET.WINDOW Return the appropriate window handle for drawing
+            %
+            % In stereo mode, returns the current offscreen draw window.
+            % In normal mode, returns the main window.
+            
+            if obj.ptb.stereo(obj.screen_index)
+                % In stereo mode, return the current offscreen window
+                val = obj.ptb.current_draw_window(obj.screen_index);
+            else
+                % In normal mode, return the main window
+                val = obj.ptb.window(obj.screen_index);
+            end
         end
         
         

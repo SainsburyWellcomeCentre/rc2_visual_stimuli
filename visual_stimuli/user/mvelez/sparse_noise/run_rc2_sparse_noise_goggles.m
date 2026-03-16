@@ -1,15 +1,15 @@
 Screen('Preference', 'SkipSyncTests', 1);
 
 % file where protocol is saved
-prot_fname = 'sparse_noise_warped_mp_300_20210827.mat';
+prot_fname = 'sparse_noise_wisecoco.mat';
 
 % variables
-screen_number           = 3;
+screen_number           = 2;        % Psychtoolbox sees both goggles as one 800 x 400 screen with id 2
 baseline_duration       = 2;        % s
 % distance_from_screen is now loaded automatically from setup config
-screen_name             = 'mp_300';
+screen_name             = 'wisecoco';
 gamma_correction_file   = 'gamma_correction_mp_300.mat';
-wait_for_start_trigger  = true;  % wait for start trigger, true or false
+wait_for_start_trigger  = false;  % wait for start trigger, true or false
 
 % NI-DAQ info
 nidaq_dev               = 'Dev1';
@@ -23,8 +23,8 @@ ptb                     = PsychoToolbox();
 ptb.calibration_on      = false;
 
 % warp info
-ptb.warp_on             = true;
-ptb.warp_file           = 'warp_mp_300.mat';
+ptb.warp_on             = false;
+ptb.warp_file           = '';
 
 % load a gamma table for gamma correction
 load(gamma_correction_file, 'gamma_table');
@@ -70,12 +70,13 @@ pd.warp_style       = 'Polygon';
 % create a square (or several)
 sq                  = Square(ptb, setup);
 
-
+%%
 try
     
     % Startup psychtoolbox
-    ptb.start(screen_number);
-    
+    ptb.start_stereo(screen_number, 90, 270);
+    ptb.choose_eye(screen_number, 0);
+
     % Present a grey screen.
     bck.buffer();
     ptb.flip(screen_number);
