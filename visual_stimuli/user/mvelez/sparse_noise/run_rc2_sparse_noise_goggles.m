@@ -6,10 +6,11 @@ prot_fname = 'sparse_noise_wisecoco.mat';
 % variables
 screen_number           = 2;        % Psychtoolbox sees both goggles as one 800 x 400 screen with id 2
 baseline_duration       = 2;        % s
+
 % distance_from_screen is now loaded automatically from setup config
 screen_name             = 'wisecoco';
 gamma_correction_file   = 'gamma_correction_mp_300.mat';
-wait_for_start_trigger  = false;  % wait for start trigger, true or false
+wait_for_start_trigger  = true;  % wait for start trigger, true or false
 
 % NI-DAQ info
 nidaq_dev               = 'Dev1';
@@ -64,8 +65,7 @@ bck.colour          = ptb.mid_grey_index(screen_number);
 
 % create object controlling photodiode box
 pd                  = Photodiode(setup);
-pd.location         = 'bottom_left';
-pd.warp_style       = 'Polygon';
+pd.location         = 'right_goggle_top_right';
 
 % create a square (or several)
 sq                  = Square(ptb, setup);
@@ -98,15 +98,20 @@ try
         % white comes first
         % alternate the photodiode colour every stimulus.
         pd.colour = mod(stim_i+1, 2);
+       
         
         if stim_i == 0
+            % handle one frame before stimulus onset
             pd.buffer();
-            ptb.flip(screen_number)
+            ptb.flip(screen_number);
+
             % set analog output to grey value
             ao.outputSingleScan(ao_volt_grey);
             pause(baseline_duration)
             continue
+        
         elseif stim_i == (n_stimuli+1)
+            % handle one frame after stimulus offset
             pd.buffer();
             ptb.flip(screen_number);
             % set analog output to grey value
@@ -115,19 +120,6 @@ try
             break
         end
         
-        % update the current stimulus and buffer it.
-        pos = [x_border(x_locations{stim_i}); y_border(y_locations{stim_i});
-            x_border(x_locations{stim_i}+1); y_border(y_locations{stim_i}+1)];
-        
-        sq.position = pos;
-        sq.colour = repmat(cols{stim_i}, 3, 1);
-        sq.buffer();
-        
-        pd.buffer();
-        
-        % Update the screen.
-        ptb.flip(screen_number);
-        
         % switch analog output each stimulus between high and low    
         if mod(stim_i + 1, 2) == 0
             ao.outputSingleScan(ao_volt_black)
@@ -135,6 +127,23 @@ try
             ao.outputSingleScan(ao_volt_white)
         end
         
+        % update the current stimulus and buffer it.
+        pos = [x_border(x_locations{stim_i}); y_border(y_locations{stim_i});
+            x_border(x_locations{stim_i}+1); y_border(y_locations{stim_i}+1)];
+        
+        sq.position = pos;
+        sq.colour = repmat(cols{stim_i}, 3, 1);
+        
+        
+        ptb.choose_eye(screen_number, 0);
+        sq.buffer();
+        
+
+        % Update the screen.
+        pd.buffer();
+        ptb.flip(screen_number);
+        
+
         % wait ~0.25s
         pause(0.25);
         

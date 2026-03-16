@@ -3,7 +3,6 @@ classdef Photodiode < handle
     properties (SetAccess = private)
         setup
         position
-        
     end
     
     properties
@@ -67,14 +66,44 @@ classdef Photodiode < handle
                         topPos = 0;
                         val = [leftPos, topPos, leftPos + obj.size, topPos + obj.size];
                     end
+                case 'right_goggle_top_right'
+                    % Settings to draw a rotated rectangle exactly
+                    % underneath the mouse goggles photo diode
+                    screen_radius = 200; % px
+                    top_right = screen_radius/sqrt(2) * [1 -1] + [200 200];
+                    photodiode_mm = [4 2.5];
+                    mm_to_px = 400/37;
+                    photodiode_px = photodiode_mm * mm_to_px;
+                    theta = pi/4; % 45 deg
+                    rot_mat = [
+                        [cos(theta) -sin(theta)];
+                        [sin(theta) cos(theta)];
+                        ];
+                    center_to_edge_vectors = [
+                        [ -photodiode_px(1) -photodiode_px(2)];
+                        [  photodiode_px(1) -photodiode_px(2)];
+                        [  photodiode_px(1)  photodiode_px(2)];
+                        [ -photodiode_px(1)  photodiode_px(2)];
+                        ]/2;
+                    center_to_edge_rotated = rot_mat * center_to_edge_vectors';
+
+                    photodiode_polygon = top_right + center_to_edge_rotated';
+                    val = photodiode_polygon;
             end
         end
         
         
         
         function buffer(obj)
-            % Use FillRect for all cases to avoid warp transformation
-            Screen('FillRect', obj.setup.window, obj.colour, obj.position);
+            if strcmp(obj.location, 'right_goggle_top_right')
+                % activate right eye window for drawing
+                obj.setup.ptb.choose_eye(obj.setup.screen_number, 1);
+                % draw the photdiode polygon
+                Screen('FillPoly',obj.setup.window, obj.colour, obj.position);
+            else
+                % Use FillRect for all cases to avoid warp transformation
+                Screen('FillRect', obj.setup.window, obj.colour, obj.position);
+            end
         end
     end
 end
