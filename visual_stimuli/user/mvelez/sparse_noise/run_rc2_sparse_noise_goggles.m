@@ -5,7 +5,7 @@ prot_fname = 'sparse_noise_wisecoco.mat';
 
 % variables
 screen_number           = 2;        % Psychtoolbox sees both goggles as one 800 x 400 screen with id 2
-baseline_duration       = 2;        % s
+baseline_duration       = 10;        % s
 
 % distance_from_screen is now loaded automatically from setup config
 screen_name             = 'wisecoco';
