@@ -1,4 +1,5 @@
 # Ignore specific user folders
 visual_stimuli/user/sweiler/
 visual_stimuli/user/ctsitou/
+*.mp4
 **/*.asv
