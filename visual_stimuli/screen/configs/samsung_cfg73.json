@@ -1,0 +1,18 @@
+{
+  "name": "samsung_cfg73",
+  "description": "Samsung CFG73 monitor for visual experiments",
+  "screen": {
+    "width_mm": 521.4,
+    "height_mm": 293.3,
+    "width_px": 1920,
+    "height_px": 1080
+  },
+  "viewing_geometry": {
+    "eye_distance_mm": 200.0,
+    "eye_position_mm": {
+      "horizontal": 260.7,
+      "vertical": 146.65
+    }
+  },
+  "notes": "Samsung CFG73 monitor, eye positioned at screen center"
+}

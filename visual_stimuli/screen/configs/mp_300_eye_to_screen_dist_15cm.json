@@ -1,0 +1,18 @@
+{
+  "name": "mp_300_eye_to_screen_dist_15cm",
+  "description": "MP-300 projector setup for mouse visual neuroscience",
+  "screen": {
+    "width_mm": 347.0,
+    "height_mm": 195.6,
+    "width_px": 960,
+    "height_px": 540
+  },
+  "viewing_geometry": {
+    "eye_distance_mm": 150.0,
+    "eye_position_mm": {
+      "horizontal": 125.0,
+      "vertical": 25.0
+    }
+  },
+  "notes": "Standard configuration for head-fixed mouse experiments"
+}

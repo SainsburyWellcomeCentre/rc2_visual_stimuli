@@ -1,0 +1,18 @@
+{
+  "name": "newdream8_240hz",
+  "description": "NewDream8 240Hz monitor setup",
+  "screen": {
+    "width_mm": 344.0,
+    "height_mm": 193.0,
+    "width_px": 960,
+    "height_px": 540
+  },
+  "viewing_geometry": {
+    "eye_distance_mm": 50.0,
+    "eye_position_mm": {
+      "horizontal": 172.0,
+      "vertical": 96.5
+    }
+  },
+  "notes": "NewDream8 240Hz monitor, eye positioned at screen center, commonly used distance 50mm"
+}
