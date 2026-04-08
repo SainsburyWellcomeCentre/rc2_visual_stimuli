@@ -1,11 +1,11 @@
 Screen('Preference', 'SkipSyncTests', 1);
 
 % file where protocol is saved
-prot_fname = 'sparse_noise_mp_300_test.mat';
+prot_fname = 'sparse_noise_mp_300_20260323.mat';
 
 % variables
 screen_number           = 2;
-baseline_duration       = 2;        % s
+baseline_duration       = 10;        % s
 % distance_from_screen is now loaded automatically from setup config
 screen_name             = 'mp_300';
 gamma_correction_file   = 'gamma_correction_mp_300.mat';
@@ -23,8 +23,8 @@ ptb                     = PsychoToolbox();
 ptb.calibration_on      = false;
 
 % warp info
-ptb.warp_on             = false;
-ptb.warp_file           = 'warp_mp_300_test.mat';
+ptb.warp_on             = true;
+ptb.warp_file           = 'warp_mp_300_eye_to_screen_dist_15cm.mat';
 
 % load a gamma table for gamma correction
 load(gamma_correction_file, 'gamma_table');

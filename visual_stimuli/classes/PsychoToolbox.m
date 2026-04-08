@@ -122,8 +122,9 @@ classdef PsychoToolbox < handle
             Screen('BlendFunction', obj.window(idx), GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             obj.ifi = Screen('GetFlipInterval', obj.window(idx));
             obj.priority(idx) = MaxPriority(obj.window(idx));
-            Priority(obj.priority(idx));
+            oldPriority = Priority(obj.priority(idx));
             Screen('Flip', obj.window(idx));
+            Priority(oldPriority)
             obj.active(idx) = false;
         end
 

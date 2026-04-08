@@ -7,10 +7,10 @@
 
 % filename to save warp parameters as
 % we also pass this resulting mat file to psychtoolbox
-fname = 'warp_mp_300.mat';
+fname = 'warp_mp_300_eye_to_screen_dist_15cm.mat';
 
 % Get setup configuration (verbose output shows screen details)
-config = get_setup_config('mp_300', true);
+config = get_setup_config('mp_300_eye_to_screen_dist_15cm', true);
 
 %% calculations
 

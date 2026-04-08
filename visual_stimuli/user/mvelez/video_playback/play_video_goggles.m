@@ -21,6 +21,25 @@
 % PHOTODIODE SYNCHRONIZATION:
 %   - Photodiode box toggles between white and black every N frames (configurable)
 %
+% NI-DAQ SYNCHRONIZATION:
+%   The script uses dual DAQ acquisition:
+%   
+%   1. Digital Input (port0/line0): Trigger detection only
+%      - On-demand polling for experiment start signal
+%      - Optional: set wait_for_start_trigger = true to wait for HIGH->LOW
+%   
+%   2. Analog Inputs (AI1, AI5, AI6): Continuous recording at 10 kHz
+%      - AI1: Master clock signal (0-5V digital)
+%      - AI5: Eye camera 0 trigger (0-5V digital)
+%      - AI6: Eye camera 1 trigger (0-5V digital)
+%      - Hardware-timed acquisition with minimal CPU overhead
+%      - Data saved to AI_YYYYMMDD_HHMMSS.bin in same directory
+%   
+%   Why analog inputs for digital signals?
+%   - USB DAQ digital I/O doesn't support hardware timing
+%   - Analog inputs can sample 0-5V signals with precise 10 kHz timing
+%   - Use read_ai_data.m to load and threshold data for event reconstruction
+%
 % FRAME TRACKING:
 %   For each displayed frame, the script logs:
 %   - display_frame: Sequential frame number (1, 2, 3, ...)
@@ -70,7 +89,7 @@
 Screen('Preference', 'SkipSyncTests', 1);
 
 % file where protocol is saved
-video_filename = 'ZebraNoise_400x400_test.mp4';
+video_filename = 'ZebraNoise_400x400_90Hz_scale0.4_seed16.mp4';
 
 % Convert to absolute path (required by Screen('OpenMovie'))
 [script_dir, ~, ~] = fileparts(mfilename('fullpath'));
@@ -85,14 +104,12 @@ photodiode_toggle_every = 5;        % toggle photodiode every N frames (1 = ever
 % distance_from_screen is now loaded automatically from setup config
 screen_name             = 'wisecoco';
 gamma_correction_file   = 'gamma_correction_mp_300.mat';
-wait_for_start_trigger  = false;  % wait for start trigger, true or false
+wait_for_start_trigger  = true;  % wait for start trigger, true or false
 
 % NI-DAQ info
 nidaq_dev               = 'Dev1';
-di_chan                 = 'port0/line0';
-ao_chan                 = 'ao0';
-ao_volt_white           = 5;
-ao_volt_black           = 0;
+% Digital input (on-demand polling for trigger only)
+di_experiment_started   = 'port0/line0';
 
 % startup psychtoolbox
 ptb                     = PsychoToolbox();
@@ -111,15 +128,17 @@ ptb.gamma_table 	= gamma_table;
 setup                       = SetupInfo(ptb, screen_name, screen_number);
 
 %% setup DAQ
+
+
+% Create DataAcquisition for digital input (trigger)
 if wait_for_start_trigger
+    dq_digital = daq("ni");
+    addinput(dq_digital, nidaq_dev, di_experiment_started, "Digital");
     
-    di = daq.createSession('ni');
-    di.addDigitalChannel(nidaq_dev, di_chan, 'InputOnly');
-    
-    % check that trigger is high to start
-    di_state = inputSingleScan(di);
-    if ~di_state
-        error('Digital input should start high')
+    % Check that trigger is high to start
+    initial_data = read(dq_digital);
+    if initial_data{1, 1} ~= 1
+        error('Digital input on channel 1 (experiment_started) should start high')
     end
 end
 
@@ -151,14 +170,17 @@ try
     bck.buffer();
     ptb.flip(screen_number);
     
-    % Wait for trigger to go low.
+    % Wait for trigger to go low (high->low transition)
     if wait_for_start_trigger
-        while inputSingleScan(di)
-            % check for key-press from the user.
-            [~, ~, keyCode] = KbCheck;
-            if keyCode(KbName('escape')), error('escape'), end
+        fprintf('Waiting for trigger (high->low)...\n');
+        data = read(dq_digital);
+        while data{1, 1} == 1
+            pause(0.001);
+            data = read(dq_digital);
         end
+        fprintf('Trigger received!\n');
     end
+    
     
     % One frame before video playback onset
     % Set photodiode to white (will start alternating pattern)
@@ -287,7 +309,16 @@ try
     
 catch ME
     ME
+    
+    % Cleanup
+    if exist('dq_analog', 'var') && dq_analog.Running
+        stop(dq_analog);
+    end
+    if exist('fid_ai', 'var') && fid_ai ~= -1
+        fclose(fid_ai);
+    end
     ptb.stop();
+    
     clearvars -except ME
     rethrow(ME);
 end
