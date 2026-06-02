@@ -9,10 +9,10 @@ clear all
 screen_name = 'wisecoco';
 
 % where to save to
-save_fname = 'sparse_noise_wisecoco.mat';
+save_fname = 'sparse_noise_wisecoco_2500stims.mat';
 
 % number of stimuli
-n_stimuli = 5000;
+n_stimuli = 2500;
 
 square_size = 5; % deg
 
