@@ -1,7 +1,7 @@
 Screen('Preference', 'SkipSyncTests', 1);
 
 % file where protocol is saved
-prot_fname = 'sparse_noise_wisecoco.mat';
+prot_fname = 'sparse_noise_wisecoco_2500stims.mat';
 
 % variables
 screen_number           = 2;        % Psychtoolbox sees both goggles as one 800 x 400 screen with id 2
@@ -9,7 +9,7 @@ baseline_duration       = 10;        % s
 
 % distance_from_screen is now loaded automatically from setup config
 screen_name             = 'wisecoco';
-gamma_correction_file   = 'gamma_correction_mp_300.mat';
+gamma_correction_file   = 'C:\Users\mateo\Documents\rc2\visual_stimuli\visual_stimuli\gamma\gamma_table_wisecoco.mat';
 wait_for_start_trigger  = true;  % wait for start trigger, true or false
 
 % NI-DAQ info
